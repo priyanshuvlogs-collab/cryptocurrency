@@ -1,0 +1,497 @@
+@import "tailwindcss";
+
+/* ─────────────────────────────────────────────────────────────────────
+   Indi Radio design tokens – "Phulkari Night"
+   Every text/background pair below is checked to WCAG 2.1 AA (≥ 4.5:1).
+   See docs/02-design-system.md for the contrast table.
+   ───────────────────────────────────────────────────────────────────── */
+
+:root {
+  color-scheme: light;
+  --bg: #fff8ef;
+  --surface: #ffffff;
+  --surface-2: #f8ebdd;
+  --text: #221018;
+  --text-muted: #6b4f52;
+  --border: #e7d3c3;
+  --saffron: #a34e00;
+  --on-saffron: #ffffff;
+  --red: #b3122a;
+  --on-red: #ffffff;
+  --gold: #8a6400;
+  --magenta: #a3125f;
+  --green: #11794a;
+  --on-green: #ffffff;
+  --glow: rgb(163 78 0 / 0.14);
+  --pattern-opacity: 0.07;
+  --hero-from: #fff1de;
+  --hero-to: #ffe2ec;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #12090f;
+    --surface: #1e1119;
+    --surface-2: #2a1822;
+    --text: #fbefe3;
+    --text-muted: #c9b3a8;
+    --border: #3a2530;
+    --saffron: #ff9f1c;
+    --on-saffron: #12090f;
+    --red: #e0263a;
+    --on-red: #ffffff;
+    --gold: #f5c542;
+    --magenta: #f062a8;
+    --green: #2bb673;
+    --on-green: #12090f;
+    --glow: rgb(255 159 28 / 0.22);
+    --pattern-opacity: 0.09;
+    --hero-from: #2a0f1d;
+    --hero-to: #12090f;
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #12090f;
+  --surface: #1e1119;
+  --surface-2: #2a1822;
+  --text: #fbefe3;
+  --text-muted: #c9b3a8;
+  --border: #3a2530;
+  --saffron: #ff9f1c;
+  --on-saffron: #12090f;
+  --red: #e0263a;
+  --on-red: #ffffff;
+  --gold: #f5c542;
+  --magenta: #f062a8;
+  --green: #2bb673;
+  --on-green: #12090f;
+  --glow: rgb(255 159 28 / 0.22);
+  --pattern-opacity: 0.09;
+  --hero-from: #2a0f1d;
+  --hero-to: #12090f;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-fg: var(--text);
+  --color-muted: var(--text-muted);
+  --color-line: var(--border);
+  --color-saffron: var(--saffron);
+  --color-on-saffron: var(--on-saffron);
+  --color-live: var(--red);
+  --color-on-live: var(--on-red);
+  --color-gold: var(--gold);
+  --color-magenta: var(--magenta);
+  --color-whatsapp: var(--green);
+  --color-on-whatsapp: var(--on-green);
+
+  /* Latin glyphs come from the first font, Gurmukhi falls through to the next. */
+  --font-sans: var(--font-inter), var(--font-gurmukhi-body), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-anybody), var(--font-gurmukhi-display), var(--font-inter), sans-serif;
+
+  --radius-card: 14px;
+  --shadow-glow: 0 10px 40px -12px var(--glow);
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    scroll-padding-top: 5rem;
+  }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    /* room for the sticky mini-player on mobile */
+    padding-bottom: calc(72px + env(safe-area-inset-bottom));
+  }
+  @media (min-width: 768px) {
+    body {
+      padding-bottom: 0;
+    }
+  }
+  :lang(pa) body,
+  body:lang(pa) {
+    line-height: 1.75; /* room for Gurmukhi matras */
+  }
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+  :lang(pa) :is(h1, h2, h3) {
+    line-height: 1.3;
+    letter-spacing: 0;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  a {
+    color: inherit;
+  }
+  :focus-visible {
+    outline: 3px solid var(--saffron);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+  ::selection {
+    background: var(--saffron);
+    color: var(--on-saffron);
+  }
+}
+
+@layer components {
+  .container-ir {
+    width: 100%;
+    max-width: 1200px;
+    margin-inline: auto;
+    padding-inline: 1rem;
+  }
+  @media (min-width: 768px) {
+    .container-ir {
+      padding-inline: 1.5rem;
+    }
+  }
+
+  .display-xl {
+    font-size: clamp(2.5rem, 7vw + 0.5rem, 5.5rem);
+    font-weight: 900;
+    font-stretch: 80%;
+    text-transform: uppercase;
+  }
+  :lang(pa) .display-xl {
+    text-transform: none;
+    font-size: clamp(2.2rem, 6vw + 0.5rem, 4.5rem);
+  }
+  .display-lg {
+    font-size: clamp(2rem, 4vw + 0.75rem, 3.5rem);
+    font-weight: 850;
+    font-stretch: 85%;
+  }
+  .display-md {
+    font-size: clamp(1.5rem, 2vw + 0.9rem, 2.25rem);
+    font-weight: 800;
+    font-stretch: 90%;
+  }
+  .eyebrow {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  :lang(pa) .eyebrow {
+    letter-spacing: 0.02em;
+    font-size: 0.9375rem;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    min-height: 48px;
+    padding: 0.75rem 1.4rem;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 1rem;
+    line-height: 1.2;
+    text-decoration: none;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition:
+      transform 0.15s ease,
+      box-shadow 0.2s ease,
+      background-color 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  .btn:hover {
+    transform: translateY(-1px);
+  }
+  .btn:active {
+    transform: translateY(1px) scale(0.98);
+  }
+  .btn[disabled],
+  .btn[aria-disabled="true"] {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+  .btn-lg {
+    min-height: 58px;
+    padding: 0.9rem 1.8rem;
+    font-size: 1.125rem;
+  }
+  .btn-primary {
+    background: var(--saffron);
+    color: var(--on-saffron);
+    box-shadow: var(--shadow-glow);
+  }
+  .btn-live {
+    background: var(--red);
+    color: var(--on-red);
+  }
+  .btn-whatsapp {
+    background: var(--green);
+    color: var(--on-green);
+  }
+  .btn-ghost {
+    background: transparent;
+    color: var(--text);
+    border-color: var(--border);
+  }
+  .btn-ghost:hover {
+    border-color: var(--saffron);
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-card);
+  }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    border: 1.5px solid var(--border);
+    font-weight: 600;
+    font-size: 0.9375rem;
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+  }
+  .chip[aria-pressed="true"],
+  .chip[aria-selected="true"],
+  .chip[aria-current="page"] {
+    background: var(--magenta);
+    border-color: var(--magenta);
+    color: var(--bg);
+  }
+
+  .field {
+    display: grid;
+    gap: 0.35rem;
+  }
+  .field label,
+  .field legend {
+    font-weight: 600;
+    font-size: 0.9375rem;
+  }
+  .input {
+    width: 100%;
+    min-height: 48px;
+    padding: 0.7rem 0.9rem;
+    border-radius: 10px;
+    border: 1.5px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font: inherit;
+  }
+  .input:focus-visible {
+    outline: 3px solid var(--saffron);
+    outline-offset: 1px;
+    border-color: var(--saffron);
+  }
+  .input[aria-invalid="true"] {
+    border-color: var(--red);
+  }
+  .field-error {
+    color: var(--red);
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .phulkari {
+    position: relative;
+    isolation: isolate;
+  }
+  .phulkari::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    opacity: var(--pattern-opacity);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56'%3E%3Cg fill='none' stroke='%23FF9F1C' stroke-width='2'%3E%3Cpath d='M28 4 52 28 28 52 4 28Z'/%3E%3Cpath d='M28 16 40 28 28 40 16 28Z' stroke='%23E0348F'/%3E%3C/g%3E%3Cpath d='M28 24 32 28 28 32 24 28Z' fill='%23F5C542'/%3E%3C/svg%3E");
+    background-size: 56px 56px;
+    mask-image: radial-gradient(ellipse at 70% 30%, #000 20%, transparent 75%);
+  }
+  .border-phulkari {
+    height: 6px;
+    background: repeating-linear-gradient(
+      90deg,
+      var(--saffron) 0 18px,
+      var(--magenta) 18px 36px,
+      var(--gold) 36px 54px,
+      var(--red) 54px 72px
+    );
+  }
+
+  .prose-ir {
+    max-width: 68ch;
+  }
+  .prose-ir > * + * {
+    margin-top: 1.1em;
+  }
+  .prose-ir h2 {
+    font-size: 1.6rem;
+    font-weight: 800;
+    margin-top: 2em;
+  }
+  .prose-ir h3 {
+    font-size: 1.2rem;
+    font-weight: 800;
+    margin-top: 1.6em;
+  }
+  .prose-ir a {
+    color: var(--saffron);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .prose-ir ul {
+    list-style: disc;
+    padding-left: 1.25rem;
+  }
+  .prose-ir li + li {
+    margin-top: 0.35em;
+  }
+  .link {
+    color: var(--saffron);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}
+
+/* ─── Motion ────────────────────────────────────────────────────────── */
+
+@keyframes onair-pulse {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--red) 70%, transparent);
+  }
+  70% {
+    box-shadow: 0 0 0 12px transparent;
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+.onair-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--red);
+  animation: onair-pulse 1.6s ease-out infinite;
+}
+
+@keyframes wave {
+  0%,
+  100% {
+    transform: scaleY(0.25);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+.wave-bar {
+  transform-origin: bottom;
+  transform: scaleY(0.25);
+  will-change: transform;
+}
+.is-playing .wave-bar {
+  animation: wave var(--dur, 1s) ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+}
+.is-idle .wave-bar {
+  animation: wave calc(var(--dur, 1s) * 3) ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+  opacity: 0.5;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s ease;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+html:not(.js) .reveal {
+  opacity: 1;
+  transform: none;
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee-track {
+  animation: marquee 40s linear infinite;
+}
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .onair-dot {
+    animation: none;
+  }
+  .is-playing .wave-bar,
+  .is-idle .wave-bar {
+    animation: none;
+    transform: scaleY(var(--static, 0.6));
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+  .marquee-track {
+    animation: none;
+  }
+}
+
+.sr-only-focusable:not(:focus):not(:focus-within) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* Theme-toggle icons follow the resolved theme set by the inline head script. */
+.icon-when-dark {
+  display: none;
+}
+[data-theme="dark"] .icon-when-dark {
+  display: block;
+}
+[data-theme="dark"] .icon-when-light {
+  display: none;
+}
