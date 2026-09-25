@@ -1,6 +1,11 @@
 # Indi Radio: Redesign Proposal (Phase 0, for approval)
 
-Status: **awaiting client approval**. Nothing gets built until the sitemap, design direction and component list below are signed off.
+Status: **Approved and built.** Where the build differs from this proposal:
+- **Next.js 16** (current stable) instead of 15. Middleware is now `proxy.ts`.
+- **Sanity Studio is a standalone app** (`/studio`, deployed to indiradio.sanity.studio) instead of being embedded at `/studio`. This keeps the public site's JavaScript small.
+- **Waveform** is a CSS animation, not Web Audio. Web Audio silences cross-origin streams without CORS and can break iPhone lock-screen playback (see `docs/02-design-system.md`).
+- Two colours were darkened to pass WCAG AA (see the design system doc).
+- Decisions taken from recommended defaults: **Stripe** for payments, **Sydney** for Australia, **GoHighLevel** for the newsletter list.
 Items marked **[CONFIRM]** are facts Indi Radio needs to supply or verify. They will not be invented.
 
 ---

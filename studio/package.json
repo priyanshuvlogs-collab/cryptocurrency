@@ -1,0 +1,19 @@
+{
+  "name": "indi-radio-studio",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Sanity Studio for indiradio.ca – schedule, shows, sponsors, events, FAQ and announcements",
+  "scripts": {
+    "dev": "sanity dev",
+    "build": "sanity build",
+    "deploy": "sanity deploy",
+    "seed": "node --experimental-strip-types ../scripts/export-seed.ts > seed/seed.ndjson && sanity dataset import seed/seed.ndjson production --replace"
+  },
+  "dependencies": {
+    "@sanity/vision": "^6",
+    "react": "^19",
+    "react-dom": "^19",
+    "sanity": "^6",
+    "styled-components": "^6.1.15"
+  }
+}

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PageHeader, Section } from "@/components/ui/Page";
+import { TrackOnMount } from "@/components/ui/TrackOnMount";
 import { CheckIcon, WhatsAppIcon } from "@/components/ui/Icons";
 import { getSettings } from "@/lib/cms";
 import { getMessages } from "@/lib/i18n";
@@ -50,6 +51,10 @@ export default async function ThankYouPage({ params, searchParams }: Props) {
       <Section>
         {paid ? (
           <div className="card max-w-2xl p-6 md:p-8">
+            <TrackOnMount
+              event="dedication_booked"
+              params={{ value: (session?.amount_total ?? 0) / 100, currency: "CAD", transaction_id: session?.id ?? "" }}
+            />
             <p className="flex items-center gap-3 text-lg font-semibold">
               <span className="grid size-9 place-items-center rounded-full bg-whatsapp text-on-whatsapp">
                 <CheckIcon />

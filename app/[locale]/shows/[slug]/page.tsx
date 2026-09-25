@@ -12,7 +12,7 @@ import { broadcastNodes, graph, seriesNode, videoNode } from "@/lib/jsonld";
 import { buildMetadata } from "@/lib/seo";
 import { t, whatsappLink } from "@/lib/site";
 import { thisWeek } from "@/lib/time";
-import { getEpisodes } from "@/lib/youtube";
+import { getAllEpisodes } from "@/lib/episodes";
 import { LOCALES, type Locale } from "@/lib/types";
 
 export const revalidate = 300;
@@ -52,7 +52,7 @@ export default async function ShowPage({ params }: Props) {
   const m = getMessages(locale);
   const c = COPY[locale];
   const [slots, shows, settings] = await Promise.all([getSchedule(), getShows(), getSettings()]);
-  const episodes = (await getEpisodes(settings.youtubeChannelId, shows)).filter((e) => e.showSlug === slug).slice(0, 6);
+  const episodes = (await getAllEpisodes(settings.youtubeChannelId, shows)).filter((e) => e.showSlug === slug).slice(0, 6);
   const showSlots = slots.filter((s) => s.showSlug === slug);
   const now = Date.now();
   const summaries = shows.map(({ slug: s, name, host, callIn }) => ({ slug: s, name, host, callIn }));

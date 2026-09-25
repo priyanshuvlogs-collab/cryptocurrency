@@ -1,0 +1,78 @@
+import { defineArrayMember, defineField, defineType } from "sanity";
+
+export const siteSettings = defineType({
+  name: "siteSettings",
+  title: "Site settings",
+  type: "document",
+  groups: [
+    { name: "live", title: "Live & stream", default: true },
+    { name: "contact", title: "Contact" },
+    { name: "links", title: "Apps & social" },
+    { name: "media", title: "Media & stats" },
+  ],
+  fields: [
+    defineField({
+      name: "tiktokLiveNow",
+      title: "🔴 Indi is LIVE on TikTok right now",
+      type: "boolean",
+      group: "live",
+      description: "Switch ON when going live on TikTok, OFF when finished. Shows the red “Watch Live” badge on every page. (YouTube live is detected automatically.)",
+      initialValue: false,
+    }),
+    defineField({ name: "tiktokLiveUrl", title: "TikTok live link", type: "url", group: "live", description: "Optional. Defaults to the TikTok profile link." }),
+    defineField({
+      name: "streamUrl",
+      title: "Live audio stream URL",
+      type: "url",
+      group: "live",
+      description: "Must start with https:// (required for iPhone). Icecast/Shoutcast MP3/AAC or HLS (.m3u8).",
+      validation: (r) => r.uri({ scheme: ["https"] }),
+    }),
+    defineField({ name: "phoneDisplay", title: "Call-in number (as shown)", type: "string", group: "contact", placeholder: "778-834-0325" }),
+    defineField({ name: "phoneE164", title: "Call-in number (international format)", type: "string", group: "contact", placeholder: "+17788340325", validation: (r) => r.regex(/^\+\d{8,15}$/, { name: "E.164" }) }),
+    defineField({ name: "whatsappNumber", title: "WhatsApp number (digits only, with country code)", type: "string", group: "contact", placeholder: "17788340325", validation: (r) => r.regex(/^\d{8,15}$/, { name: "digits" }) }),
+    defineField({ name: "whatsappChannelUrl", title: "WhatsApp channel invite link", type: "url", group: "contact" }),
+    defineField({ name: "email", title: "Public email", type: "string", group: "contact", validation: (r) => r.email() }),
+    defineField({
+      name: "address",
+      title: "Address",
+      type: "object",
+      group: "contact",
+      description: "Street and postal code are optional – leave empty to show only “Surrey, BC”.",
+      fields: [
+        defineField({ name: "street", type: "string" }),
+        defineField({ name: "locality", type: "string", initialValue: "Surrey" }),
+        defineField({ name: "region", type: "string", initialValue: "BC" }),
+        defineField({ name: "postalCode", type: "string" }),
+        defineField({ name: "country", type: "string", initialValue: "CA" }),
+      ],
+    }),
+    defineField({ name: "appStoreUrl", title: "App Store link (one official iPhone app)", type: "url", group: "links" }),
+    defineField({ name: "playStoreUrl", title: "Google Play link (one official Android app)", type: "url", group: "links" }),
+    defineField({ name: "tuneInUrl", title: "TuneIn / Alexa link", type: "url", group: "links" }),
+    defineField({
+      name: "socials",
+      title: "Social profiles",
+      type: "object",
+      group: "links",
+      fields: ["tiktok", "youtube", "facebook", "instagram"].map((name) => defineField({ name, type: "url" })),
+    }),
+    defineField({ name: "youtubeChannelId", title: "YouTube channel ID", type: "string", group: "links", description: "Starts with UC… (YouTube Studio → Settings → Channel → Advanced)." }),
+    defineField({ name: "hostImage", title: "Photo of Indi Jaswal", type: "image", group: "media", options: { hotspot: true }, fields: [defineField({ name: "alt", type: "string", title: "Description (alt text)" })] }),
+    defineField({ name: "mediaKit", title: "Media kit (PDF)", type: "file", group: "media", options: { accept: "application/pdf" } }),
+    defineField({
+      name: "audienceStats",
+      title: "Audience stats (Advertise page)",
+      type: "array",
+      group: "media",
+      of: [
+        defineArrayMember({
+          type: "object",
+          fields: [defineField({ name: "label", type: "localeString" }), defineField({ name: "value", type: "string", placeholder: "25,000+" })],
+          preview: { select: { title: "value", subtitle: "label.en" } },
+        }),
+      ],
+    }),
+  ],
+  preview: { prepare: () => ({ title: "Site settings" }) },
+});

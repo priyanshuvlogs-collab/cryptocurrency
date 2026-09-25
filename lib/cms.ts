@@ -8,6 +8,7 @@ import type {
   Announcement,
   CommunityEvent,
   DedicationTier,
+  Episode,
   Faq,
   L10n,
   PressItem,
@@ -200,3 +201,20 @@ export const getContest = cache(async (): Promise<{ title: L10n; question: L10n;
     null,
   ),
 );
+
+/** Episodes added by hand in the CMS (to feature a video or tag it to a show). */
+export const getFeaturedEpisodes = cache(async (): Promise<Episode[]> => {
+  const raw = await query<{ id: string; title: string; youtubeId: string; showSlug: string | null; publishedAt: string; description: string | null }[]>(
+    `*[_type == "episode" && defined(youtubeId)] | order(publishedAt desc){ "id": _id, title, youtubeId, "showSlug": show->slug.current, publishedAt, description }`,
+    [],
+  );
+  return raw.map((e) => ({
+    id: e.youtubeId,
+    title: e.title,
+    description: e.description || "",
+    publishedAt: e.publishedAt,
+    thumbnail: `https://i.ytimg.com/vi/${e.youtubeId}/hqdefault.jpg`,
+    url: `https://www.youtube.com/watch?v=${e.youtubeId}`,
+    showSlug: e.showSlug,
+  }));
+});

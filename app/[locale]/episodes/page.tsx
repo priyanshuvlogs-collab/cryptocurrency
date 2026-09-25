@@ -8,7 +8,7 @@ import { getMessages, PAGES } from "@/lib/i18n";
 import { graph, videoNode } from "@/lib/jsonld";
 import { pageMetadata } from "@/lib/seo";
 import { t } from "@/lib/site";
-import { getEpisodes } from "@/lib/youtube";
+import { getAllEpisodes } from "@/lib/episodes";
 import type { Locale } from "@/lib/types";
 
 export const revalidate = 1800;
@@ -36,7 +36,7 @@ export default async function EpisodesPage({ params }: Props) {
   const m = getMessages(locale);
   const c = COPY[locale];
   const [settings, shows] = await Promise.all([getSettings(), getShows()]);
-  const episodes = await getEpisodes(settings.youtubeChannelId, shows);
+  const episodes = await getAllEpisodes(settings.youtubeChannelId, shows);
   const showsWithEpisodes = shows.filter((s) => episodes.some((e) => e.showSlug === s.slug));
 
   return (

@@ -8,7 +8,7 @@ import { ArrowRightIcon, CalendarIcon, PhoneIcon } from "@/components/ui/Icons";
 import { getDedicationTiers, getSettings, getShows, getSocialPosts, getSponsors } from "@/lib/cms";
 import { getMessages } from "@/lib/i18n";
 import { pageMetadata } from "@/lib/seo";
-import { getEpisodes } from "@/lib/youtube";
+import { getAllEpisodes } from "@/lib/episodes";
 import type { Locale } from "@/lib/types";
 
 export const revalidate = 300;
@@ -74,7 +74,7 @@ export default async function HomePage({ params }: Props) {
     getSponsors(),
     getSocialPosts(),
   ]);
-  const episodes = await getEpisodes(settings.youtubeChannelId, shows);
+  const episodes = await getAllEpisodes(settings.youtubeChannelId, shows);
 
   return (
     <>
