@@ -165,9 +165,12 @@ export function EventBookingForm() {
 export function DedicationForm({
   tiers,
   defaultTier,
+  payable,
 }: {
   tiers: { value: string; label: string; description?: string }[];
   defaultTier?: string;
+  /** false until prices are set and Stripe is connected → booking is sent as a request */
+  payable: boolean;
 }) {
   const { locale, m } = useLocale();
   const occasions = [
@@ -179,7 +182,9 @@ export function DedicationForm({
   ];
   const today = new Date().toISOString().slice(0, 10);
   return (
-    <SmartForm action={bookDedication} event="dedication_checkout" submitLabel={L(locale, "Continue to secure payment", "ਸੁਰੱਖਿਅਤ ਭੁਗਤਾਨ ਵੱਲ ਜਾਓ")}>
+    <SmartForm action={bookDedication} event="dedication_checkout" submitLabel={
+        payable ? L(locale, "Continue to secure payment", "ਸੁਰੱਖਿਅਤ ਭੁਗਤਾਨ ਵੱਲ ਜਾਓ") : L(locale, "Send booking request", "ਬੁਕਿੰਗ ਬੇਨਤੀ ਭੇਜੋ")
+      }>
       <ChoiceGroup name="occasion" legend={L(locale, "1. What are we celebrating?", "1. ਕਿਹੜੀ ਖ਼ੁਸ਼ੀ ਮਨਾ ਰਹੇ ਹਾਂ?")} options={occasions} required columns={5} />
       <ChoiceGroup
         name="tier"

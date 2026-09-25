@@ -75,9 +75,6 @@ const nextConfig: NextConfig = {
     ];
     return [
       ...old.map(([source, destination]) => ({ source, destination, permanent: true })),
-      ...old
-        .filter(([s]) => !s.includes(":"))
-        .map(([source, destination]) => ({ source: `${source}/`, destination, permanent: true })),
       { source: "/wp-admin/:path*", destination: "/en", permanent: false },
       { source: "/feed", destination: "/en/episodes", permanent: true },
     ];

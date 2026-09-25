@@ -30,14 +30,10 @@ export function PlayButton({ variant = "hero", className = "" }: { variant?: "he
   }
 
   return (
-    <button
-      type="button"
-      onClick={() => toggle()}
-      aria-label={label}
-      className={`btn btn-primary ${variant === "hero" ? "btn-lg" : ""} ${className}`}
-    >
+    // Visible text is the accessible name (WCAG 2.5.3 label-in-name).
+    <button type="button" onClick={() => toggle()} className={`btn btn-primary ${variant === "hero" ? "btn-lg" : ""} ${className}`}>
       {busy ? <Spinner /> : isActive ? <PauseIcon size={22} /> : <PlayIcon size={22} />}
-      <span aria-hidden="true">{busy ? m.player.loading : isActive ? m.player.pause : m.player.listenLive}</span>
+      <span>{busy ? m.player.loading : isActive ? m.player.pause : m.player.listenLive}</span>
     </button>
   );
 }

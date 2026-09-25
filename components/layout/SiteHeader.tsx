@@ -26,8 +26,9 @@ export function SiteHeader({ phoneDisplay, phoneE164, whatsappUrl }: { phoneDisp
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-bg/90 backdrop-blur-md">
       <div className="container-ir flex h-16 items-center gap-3">
-        <Link href={href("")} className="shrink-0 rounded-md" aria-label="Indi Radio – home">
+        <Link href={href("")} className="shrink-0 rounded-md">
           <Logo />
+          <span className="sr-only"> {m.nav.home}</span>
         </Link>
         {status === "playing" ? (
           <span className="hidden items-center gap-1.5 rounded-full bg-live px-2.5 py-0.5 text-xs font-extrabold text-on-live sm:inline-flex">

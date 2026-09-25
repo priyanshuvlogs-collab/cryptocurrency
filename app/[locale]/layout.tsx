@@ -20,7 +20,9 @@ import { SITE_NAME, SITE_URL, t, whatsappLink } from "@/lib/site";
 import { LOCALES } from "@/lib/types";
 
 const anybody = Anybody({ subsets: ["latin"], axes: ["wdth"], variable: "--font-anybody", display: "swap" });
-const inter = Inter_Tight({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
+// Body font uses display "optional": if it isn't ready by first paint the
+// system fallback is kept for that view, so text never re-renders (better LCP/CLS).
+const inter = Inter_Tight({ subsets: ["latin"], variable: "--font-inter", display: "optional" });
 const muktaMahee = Mukta_Mahee({
   weight: ["600", "800"],
   subsets: ["gurmukhi"],

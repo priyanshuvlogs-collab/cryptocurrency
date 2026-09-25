@@ -10,7 +10,7 @@ export function Logo({ className = "", compact = false }: { className?: string; 
       </svg>
       {compact ? null : (
         <span className="font-display text-[1.35rem] leading-none font-black tracking-tight uppercase [font-stretch:80%]">
-          Indi<span className="text-saffron">Radio</span>
+          Indi <span className="text-saffron">Radio</span>
         </span>
       )}
     </span>

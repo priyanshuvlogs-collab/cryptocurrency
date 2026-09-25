@@ -192,3 +192,11 @@ export const getSocialPosts = cache(async (): Promise<SocialPost[]> =>
     seed.socialPosts,
   ),
 );
+
+/** The currently running contest, if any (shown on the Song Requests page). */
+export const getContest = cache(async (): Promise<{ title: L10n; question: L10n; endsAt: string | null } | null> =>
+  query(
+    `*[_type == "contest" && coalesce(active, false) && (!defined(endsAt) || endsAt > now())] | order(_updatedAt desc)[0]{ title, question, endsAt }`,
+    null,
+  ),
+);

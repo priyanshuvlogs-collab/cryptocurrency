@@ -32,7 +32,7 @@ export function SiteFooter({ locale, m, settings }: { locale: Locale; m: Message
           <Logo />
           {/* Key facts in plain HTML for search engines and AI answer engines. */}
           <p className="max-w-md text-sm text-muted">{t(BRAND_DESCRIPTION, locale)}</p>
-          <address className="text-sm not-italic">
+          <address className="text-sm leading-7 not-italic">
             <strong>Indi Radio</strong>
             <br />
             {settings.address.street ? (
@@ -43,15 +43,15 @@ export function SiteFooter({ locale, m, settings }: { locale: Locale; m: Message
             ) : null}
             Surrey, British Columbia, Canada
             <br />
-            <a href={`tel:${settings.phoneE164}`} className="link">
+            <a href={`tel:${settings.phoneE164}`} className="link inline-block py-1">
               {settings.phoneDisplay}
             </a>
             {" · "}
-            <a href={whatsappLink(settings.whatsappNumber)} className="link" target="_blank" rel="noopener noreferrer">
+            <a href={whatsappLink(settings.whatsappNumber)} className="link inline-block py-1" target="_blank" rel="noopener noreferrer">
               WhatsApp
             </a>
             <br />
-            <a href={`mailto:${settings.email}`} className="link">
+            <a href={`mailto:${settings.email}`} className="link inline-block py-1">
               {settings.email}
             </a>
           </address>
