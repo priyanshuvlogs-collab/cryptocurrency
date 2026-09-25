@@ -53,13 +53,15 @@ function subscribe(listener: () => void) {
   };
 }
 
+// Must return the same value until the next tick (useSyncExternalStore contract).
+function getSnapshot() {
+  if (!now) now = Date.now();
+  return now;
+}
+
 /** Milliseconds since epoch on the client, `null` during SSR/hydration. */
 export function useNow(): number | null {
-  return useSyncExternalStore(
-    subscribe,
-    () => now || Date.now(),
-    () => null,
-  );
+  return useSyncExternalStore(subscribe, getSnapshot, () => null);
 }
 
 export interface LiveState {

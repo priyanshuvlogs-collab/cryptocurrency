@@ -30,5 +30,5 @@ export function proxy(req: NextRequest) {
 
 export const config = {
   // Skip API routes, Next internals, SEO/AI files and anything with a file extension.
-  matcher: ["/((?!api|_next|studio|llms.txt|llms-full.txt|robots.txt|sitemap.xml|manifest.webmanifest|.*\\..*).*)"],
+  matcher: ["/((?!api|_next|studio|\\.well-known|llms.txt|llms-full.txt|robots.txt|sitemap.xml|manifest.webmanifest|.*\\..*).*)"],
 };
