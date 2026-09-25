@@ -85,11 +85,11 @@ export default async function CallInPage({ params }: Props) {
 
       <section aria-label={c.lineLabel} className="container-ir py-10">
         <div className="grid gap-4 lg:grid-cols-[1.3fr_1fr]">
-          <div className="card phulkari p-6 md:p-10">
+          <div className="band-marigold rounded-md p-6 shadow-[10px_10px_0_var(--rule)] md:p-10">
             <p className="eyebrow">{c.lineLabel}</p>
             <a
               href={`tel:${settings.phoneE164}`}
-              className="mt-2 block font-display text-[clamp(2.5rem,9vw,4.5rem)] leading-none font-black tracking-tight text-live tabular-nums hover:underline"
+              className="mt-2 block font-display text-[clamp(3rem,11vw,6.2rem)] whitespace-nowrap leading-none font-black tracking-tight tabular-nums hover:underline"
             >
               {settings.phoneDisplay}
             </a>

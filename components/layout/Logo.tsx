@@ -1,16 +1,21 @@
-/** Indi Radio wordmark: a phulkari diamond "on-air" mark + wordmark. */
+/**
+ * Indi Radio wordmark: a record with a phulkari-diamond label and radiating
+ * signal, next to a condensed poster-style wordmark.
+ */
 export function Logo({ className = "", compact = false }: { className?: string; compact?: boolean }) {
   return (
-    <span className={`inline-flex items-center gap-2.5 ${className}`}>
-      <svg width="36" height="36" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
-        <path d="M24 2 46 24 24 46 2 24Z" fill="var(--saffron)" />
-        <path d="M24 10 38 24 24 38 10 24Z" fill="var(--magenta)" />
-        <path d="M24 17 31 24 24 31 17 24Z" fill="var(--gold)" />
-        <circle cx="24" cy="24" r="3.2" fill="var(--red)" />
+    <span className={`inline-flex items-center gap-2 ${className}`}>
+      <svg width="38" height="38" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+        <circle cx="24" cy="24" r="22" fill="currentColor" />
+        <circle cx="24" cy="24" r="17" fill="none" stroke="var(--bg)" strokeOpacity=".25" strokeWidth="1" />
+        <circle cx="24" cy="24" r="13" fill="none" stroke="var(--bg)" strokeOpacity=".25" strokeWidth="1" />
+        <path d="M24 13.5 34.5 24 24 34.5 13.5 24Z" fill="#FFA41B" />
+        <path d="M24 18.5 29.5 24 24 29.5 18.5 24Z" fill="#E4007C" />
+        <circle cx="24" cy="24" r="2.2" fill="#F4ECDD" />
       </svg>
       {compact ? null : (
-        <span className="font-display text-[1.35rem] leading-none font-black tracking-tight uppercase [font-stretch:80%]">
-          Indi <span className="text-saffron">Radio</span>
+        <span className="font-display text-[1.7rem] leading-none font-black tracking-[0.01em] uppercase">
+          Indi <span className="text-accent">Radio</span>
         </span>
       )}
     </span>

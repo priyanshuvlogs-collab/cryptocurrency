@@ -1,108 +1,121 @@
-import Image from "next/image";
 import type { Messages } from "@/messages/en";
 import type { Locale, SiteSettings } from "@/lib/types";
 import { whatsappLink } from "@/lib/site";
-import { NowPlaying, OnAirBadge, PlayButton, PlayerStatusText, Waveform } from "@/components/player/PlayerControls";
-import { MicIcon, PhoneIcon, WhatsAppIcon } from "@/components/ui/Icons";
+import { Disc } from "@/components/player/Disc";
+import { NowPlaying, PlayButton, PlayerStatusText, Waveform } from "@/components/player/PlayerControls";
+import { PhoneIcon, WhatsAppIcon } from "@/components/ui/Icons";
+import { Ticker } from "./Ticker";
 
 const COPY = {
   en: {
-    h1: "Live Punjabi radio from Surrey, Canada",
-    fact: "Indi Radio is a live Punjabi online radio station from Surrey, British Columbia, hosted by Indi Jaswal. Call in, request a song, or just press play: it’s free, worldwide.",
-    hostCaption: "Indi Jaswal · Host & founder",
-    photoAlt: "Indi Jaswal, host and founder of Indi Radio, in the studio in Surrey, BC",
+    kicker: ["On air", "Surrey, BC", "24/7"],
+    fact: "Indi Radio is a live Punjabi online radio station from Surrey, British Columbia, hosted by Indi Jaswal. Call in, request a song, or just press play. It’s free, and it’s heard worldwide.",
+    host: "Hosted by",
+    ticker: ["On air now", "Live call-ins", "Bhedan Da Kaal", "Punjabi music 24/7", "Surrey · BC · Canada", "ਲਾਈਵ ਪੰਜਾਬੀ ਰੇਡੀਓ"],
+    sticker: "Live call-in",
+    dial: ["Vancouver", "London", "Dubai", "Delhi", "Sydney"],
   },
   pa: {
-    h1: "ਸਰੀ, ਕੈਨੇਡਾ ਤੋਂ ਲਾਈਵ ਪੰਜਾਬੀ ਰੇਡੀਓ",
+    kicker: ["ਆਨ-ਏਅਰ", "ਸਰੀ, ਬੀ.ਸੀ.", "24/7"],
     fact: "ਇੰਡੀ ਰੇਡੀਓ ਸਰੀ, ਬ੍ਰਿਟਿਸ਼ ਕੋਲੰਬੀਆ ਤੋਂ ਲਾਈਵ ਪੰਜਾਬੀ ਆਨਲਾਈਨ ਰੇਡੀਓ ਸਟੇਸ਼ਨ ਹੈ, ਜਿਸਦੇ ਹੋਸਟ ਇੰਡੀ ਜਸਵਾਲ ਹਨ। ਕਾਲ ਕਰੋ, ਗੀਤ ਦੀ ਫ਼ਰਮਾਇਸ਼ ਕਰੋ, ਜਾਂ ਬੱਸ ਪਲੇਅ ਦਬਾਓ: ਮੁਫ਼ਤ, ਦੁਨੀਆ ਭਰ ਵਿੱਚ।",
-    hostCaption: "ਇੰਡੀ ਜਸਵਾਲ · ਹੋਸਟ ਅਤੇ ਸੰਸਥਾਪਕ",
-    photoAlt: "ਇੰਡੀ ਰੇਡੀਓ ਦੇ ਹੋਸਟ ਅਤੇ ਸੰਸਥਾਪਕ ਇੰਡੀ ਜਸਵਾਲ, ਸਰੀ ਦੇ ਸਟੂਡੀਓ ਵਿੱਚ",
+    host: "ਹੋਸਟ",
+    ticker: ["ਹੁਣ ਆਨ-ਏਅਰ", "ਲਾਈਵ ਕਾਲ-ਇਨ", "ਭੇਡਾਂ ਦਾ ਕਾਲ", "24/7 ਪੰਜਾਬੀ ਸੰਗੀਤ", "ਸਰੀ · ਬੀ.ਸੀ. · ਕੈਨੇਡਾ", "Live Punjabi radio"],
+    sticker: "ਲਾਈਵ ਕਾਲ-ਇਨ",
+    dial: ["ਵੈਨਕੂਵਰ", "ਲੰਡਨ", "ਦੁਬਈ", "ਦਿੱਲੀ", "ਸਿਡਨੀ"],
   },
 };
 
 /**
- * Home hero. The H1 and the key-fact sentence are server-rendered text, so
- * the LCP element paints immediately and crawlers read the facts.
+ * Home hero: always-dark "broadcast" band. The H1 and the key-fact sentence
+ * are server-rendered text (LCP + crawlers); the record is the player.
  */
 export function LiveHero({ locale, m, settings }: { locale: Locale; m: Messages; settings: SiteSettings }) {
   const c = COPY[locale];
   return (
-    <section aria-labelledby="hero-title" className="phulkari relative overflow-hidden bg-gradient-to-br from-[var(--hero-from)] via-[var(--bg)] to-[var(--hero-to)]">
-      <div className="container-ir grid items-center gap-10 py-10 md:py-16 lg:grid-cols-[1.15fr_0.85fr] lg:py-20">
-        <div>
-          <OnAirBadge />
-          <h1 id="hero-title" className="display-xl mt-5">
-            {c.h1}
-          </h1>
-          <p className="mt-5 max-w-xl text-lg text-muted md:text-xl">{c.fact}</p>
+    <section aria-labelledby="hero-title" className="band-ink overflow-hidden">
+      <Ticker items={[...c.ticker, `${m.cta.callIn} ${settings.phoneDisplay}`]} />
 
-          <div className="card mt-8 max-w-xl p-5 md:p-6">
-            <div className="flex items-start justify-between gap-4">
-              <NowPlaying />
-              <Waveform className="hidden shrink-0 sm:flex" bars={14} />
-            </div>
-            <div className="mt-5 grid grid-cols-2 gap-3 sm:flex sm:flex-wrap">
-              <PlayButton variant="hero" className="col-span-2 whitespace-nowrap" />
-              <a href={`tel:${settings.phoneE164}`} className="btn btn-live btn-lg">
-                <PhoneIcon size={22} />
-                {m.cta.callIn}
-              </a>
-              <a
-                href={whatsappLink(settings.whatsappNumber)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn btn-whatsapp btn-lg"
-                aria-label={`${m.cta.whatsapp} Indi Radio`}
-              >
-                <WhatsAppIcon size={22} />
-                <span>{m.cta.whatsapp}</span>
-              </a>
-            </div>
-            <PlayerStatusText className="mt-3" />
-            <p className="text-sm text-muted">
-              {m.cta.callIn}:{" "}
-              <a href={`tel:${settings.phoneE164}`} className="font-bold text-fg">
-                {settings.phoneDisplay}
-              </a>
-            </p>
+      <div className="container-ir grid items-center gap-12 pt-10 pb-8 md:pt-14 lg:grid-cols-[1.1fr_0.9fr] lg:gap-8 lg:pt-16">
+        <div className="relative z-10">
+          <p className="meta flex flex-wrap items-center gap-x-3 gap-y-1 text-muted">
+            <span className="onair-dot" aria-hidden="true" />
+            <span className="text-fg">{c.kicker[0]}</span>
+            <span aria-hidden="true">/</span>
+            <span>{c.kicker[1]}</span>
+            <span aria-hidden="true">/</span>
+            <span>{c.kicker[2]}</span>
+          </p>
+
+          <h1 id="hero-title" className="display-xl mt-6">
+            {locale === "pa" ? (
+              <>
+                <span className="block text-[0.42em] text-muted">ਸਰੀ, ਕੈਨੇਡਾ ਤੋਂ</span>
+                <span className="block">ਲਾਈਵ ਪੰਜਾਬੀ</span>
+                <span className="block text-marigold">ਰੇਡੀਓ</span>
+              </>
+            ) : (
+              <>
+                <span className="block">Live</span>
+                <span className="block text-marigold">Punjabi</span>
+                <span className="block">Radio</span>
+                <span className="serif mt-3 block text-[0.34em] leading-none text-muted">from Surrey, Canada</span>
+              </>
+            )}
+          </h1>
+
+          <p className="mt-7 max-w-xl text-lg text-muted">{c.fact}</p>
+
+          <div className="mt-8 flex items-end justify-between gap-6 border-y border-line py-5">
+            <NowPlaying />
+            <Waveform bars={16} className="hidden h-12 shrink-0 sm:flex" />
           </div>
+
+          <div className="mt-6 flex flex-wrap gap-3">
+            <PlayButton variant="hero" className="grow sm:grow-0" />
+            <a href={`tel:${settings.phoneE164}`} className="btn btn-live btn-lg grow sm:grow-0">
+              <PhoneIcon size={20} />
+              {m.cta.callIn} <span className="tabular-nums">{settings.phoneDisplay}</span>
+            </a>
+            <a
+              href={whatsappLink(settings.whatsappNumber)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-ghost btn-lg"
+            >
+              <WhatsAppIcon size={20} /> {m.cta.whatsapp}
+            </a>
+          </div>
+          <PlayerStatusText className="mt-2" />
         </div>
 
-        <figure className="relative mx-auto w-full max-w-md">
-          <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] border border-line bg-surface shadow-[var(--shadow-glow)]">
-            {settings.hostImage ? (
-              <Image src={settings.hostImage} alt={c.photoAlt} fill priority sizes="(min-width: 1024px) 420px, 90vw" className="object-cover" />
-            ) : (
-              <HostPlaceholder />
-            )}
-            <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 bg-gradient-to-t from-black/80 to-transparent p-5 pt-16 text-white">
-              <Waveform bars={20} className="h-10" />
-            </div>
+        <div className="relative mx-auto w-full max-w-[min(88vw,540px)]">
+          <Disc />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -top-2 right-0 grid size-28 rotate-[10deg] place-items-center rounded-full bg-[#FF6FB5] p-3 text-center text-ink shadow-xl md:size-32"
+          >
+            <span className="meta block text-[0.7rem]! leading-tight font-extrabold">{c.sticker}</span>
+            <span className="-mt-3 block font-display text-xl leading-none font-black tabular-nums">{settings.phoneDisplay}</span>
           </div>
-          <figcaption className="mt-3 text-center font-semibold">
-            {c.hostCaption}
-            {!settings.hostImage ? <span className="block text-xs font-normal text-muted">[CONFIRM host photo]</span> : null}
-          </figcaption>
-        </figure>
+          <p className="mt-5 text-center text-muted">
+            {c.host} <span className="serif text-2xl text-fg">Indi Jaswal</span>
+          </p>
+        </div>
       </div>
-    </section>
-  );
-}
 
-/** Art-directed stand-in until a licensed photo of Indi Jaswal is uploaded. */
-function HostPlaceholder() {
-  return (
-    <div className="absolute inset-0 grid place-items-center bg-[radial-gradient(circle_at_50%_35%,var(--surface-2),var(--surface))]">
-      <svg viewBox="0 0 200 200" className="w-3/4" aria-hidden="true">
-        <g fill="none" strokeWidth="3">
-          <path d="M100 8 192 100 100 192 8 100Z" stroke="var(--saffron)" />
-          <path d="M100 32 168 100 100 168 32 100Z" stroke="var(--magenta)" />
-          <path d="M100 56 144 100 100 144 56 100Z" stroke="var(--gold)" />
-        </g>
-      </svg>
-      <span className="absolute grid size-28 place-items-center rounded-full bg-saffron text-on-saffron">
-        <MicIcon size={56} />
-      </span>
-    </div>
+      {/* "Tuned in worldwide": a decorative FM-style dial of the cities listening. */}
+      <div className="container-ir pb-8" aria-hidden="true">
+        <div className="relative text-on-ink">
+          <div className="dial" />
+          <span className="absolute bottom-0 left-[8%] h-10 w-[3px] bg-live" />
+        </div>
+        <div className="meta mt-2 flex justify-between text-muted">
+          {c.dial.map((city) => (
+            <span key={city}>{city}</span>
+          ))}
+        </div>
+      </div>
+      <div className="phulkari-band" aria-hidden="true" />
+    </section>
   );
 }

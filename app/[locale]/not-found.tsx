@@ -7,7 +7,7 @@ import { PlayButton } from "@/components/player/PlayerControls";
 export default function NotFound() {
   const { locale, m } = useLocale();
   return (
-    <section className="phulkari container-ir grid min-h-[60vh] place-content-center gap-6 py-20 text-center">
+    <section className="container-ir grid min-h-[60vh] place-content-center gap-6 py-20 text-center">
       <p className="eyebrow">404</p>
       <h1 className="display-lg">{m.notFound.title}</h1>
       <p className="mx-auto max-w-lg text-lg text-muted">{m.notFound.body}</p>

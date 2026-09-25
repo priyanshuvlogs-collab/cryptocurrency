@@ -101,7 +101,7 @@ export default async function AdvertisePage({ params }: Props) {
           {settings.audienceStats.map((s) => (
             <div key={s.label.en} className="reveal card p-6">
               <dt className="text-muted">{t(s.label, locale)}</dt>
-              <dd className="mt-1 font-display text-4xl font-black text-saffron">{s.value}</dd>
+              <dd className="mt-1 font-display text-4xl font-black text-accent">{s.value}</dd>
             </div>
           ))}
         </dl>
@@ -136,7 +136,7 @@ export default async function AdvertisePage({ params }: Props) {
           {packages.map((p) => (
             <li key={p.id} className="reveal card flex flex-col p-6">
               <h3 className="text-xl font-extrabold">{t(p.name, locale)}</h3>
-              <p className="mt-1 font-bold text-saffron">{t(p.priceNote, locale)}</p>
+              <p className="mt-1 font-bold text-accent">{t(p.priceNote, locale)}</p>
               <p className="mt-2 text-muted">{t(p.description, locale)}</p>
               <ul className="mt-4 flex-1 space-y-2">
                 {p.features.map((f, i) => (

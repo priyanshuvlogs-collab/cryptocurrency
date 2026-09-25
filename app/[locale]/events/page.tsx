@@ -50,7 +50,7 @@ function EventCard({ ev, locale, m, liveLabel }: { ev: CommunityEvent; locale: L
   return (
     <article id={ev.slug} className="reveal card grid overflow-hidden md:grid-cols-[240px_1fr]">
       <div className="relative aspect-video bg-surface-2 md:aspect-auto">
-        {ev.image ? <Image src={ev.image} alt={t(ev.title, locale)} fill sizes="(min-width: 768px) 240px, 100vw" className="object-cover" /> : <div className="phulkari size-full" />}
+        {ev.image ? <Image src={ev.image} alt={t(ev.title, locale)} fill sizes="(min-width: 768px) 240px, 100vw" className="object-cover" /> : <div className="phulkari-fill size-full" />}
       </div>
       <div className="p-6">
         {ev.liveBroadcast ? (
@@ -60,7 +60,7 @@ function EventCard({ ev, locale, m, liveLabel }: { ev: CommunityEvent; locale: L
         ) : null}
         <h3 className="text-xl font-extrabold">{t(ev.title, locale)}</h3>
         <p className="mt-2 flex items-center gap-2 font-semibold">
-          <CalendarIcon size={18} className="text-saffron" />
+          <CalendarIcon size={18} className="text-accent" />
           <time dateTime={ev.start}>
             {formatDate(start, STATION_TZ, locale)} · {formatTime(start, STATION_TZ, locale)}–{formatTime(end, STATION_TZ, locale)} PT
           </time>
@@ -120,7 +120,7 @@ export default async function EventsPage({ params }: Props) {
         </Section>
       ) : null}
       <Section>
-        <div className="card phulkari p-6 md:p-10">
+        <div className="band-ink rounded-md p-6 md:p-10">
           <h2 className="display-md">{c.hostTitle}</h2>
           <p className="mt-3 max-w-2xl text-muted">{c.hostBody}</p>
           <Link href={`/${locale}/indi-jaswal#book`} className="btn btn-primary mt-6">

@@ -9,7 +9,7 @@ export interface Crumb {
   path: string;
 }
 
-/** Breadcrumbs + the page's single H1 + lead paragraph. */
+/** Dark broadcast band with breadcrumbs, the page's single H1 and a lead. */
 export function PageHeader({
   locale,
   m,
@@ -29,20 +29,24 @@ export function PageHeader({
 }) {
   const all: Crumb[] = [{ name: m.breadcrumbs.home, path: "/" }, ...crumbs];
   return (
-    <header className="phulkari border-b border-line bg-gradient-to-b from-[var(--hero-from)] to-[var(--hero-to)]">
+    <header className="band-ink overflow-hidden">
       <JsonLd data={graph(breadcrumbNode(locale, all))} />
-      <div className="container-ir py-10 md:py-16">
+      <div className="container-ir pt-8 pb-12 md:pt-10 md:pb-16">
         <nav aria-label={m.breadcrumbs.label}>
-          <ol className="flex flex-wrap items-center gap-1 text-sm text-muted">
+          <ol className="meta flex flex-wrap items-center gap-2 text-muted">
             {all.map((c, i) => (
-              <li key={c.path} className="flex items-center gap-1">
-                {i > 0 ? <span aria-hidden="true">/</span> : null}
+              <li key={c.path} className="flex items-center gap-2">
+                {i > 0 ? (
+                  <svg width="7" height="7" viewBox="0 0 10 10" aria-hidden="true" className="text-marigold">
+                    <path d="M5 0 10 5 5 10 0 5Z" fill="currentColor" />
+                  </svg>
+                ) : null}
                 {i < all.length - 1 ? (
-                  <Link href={`/${locale}${c.path === "/" ? "" : c.path}`} className="hover:text-saffron">
+                  <Link href={`/${locale}${c.path === "/" ? "" : c.path}`} className="inline-block py-1 hover:text-fg">
                     {c.name}
                   </Link>
                 ) : (
-                  <span aria-current="page" className="font-semibold text-fg">
+                  <span aria-current="page" className="text-fg">
                     {c.name}
                   </span>
                 )}
@@ -50,15 +54,17 @@ export function PageHeader({
             ))}
           </ol>
         </nav>
-        {eyebrow ? <p className="eyebrow mt-6">{eyebrow}</p> : null}
-        <h1 className={`display-lg ${eyebrow ? "mt-2" : "mt-6"} max-w-4xl`}>{title}</h1>
-        {lead ? <div className="mt-4 max-w-2xl text-lg text-muted md:text-xl">{lead}</div> : null}
+        {eyebrow ? <p className="eyebrow mt-10">{eyebrow}</p> : null}
+        <h1 className={`display-lg ${eyebrow ? "mt-4" : "mt-10"} max-w-5xl`}>{title}</h1>
+        {lead ? <div className="mt-6 max-w-2xl text-lg text-muted md:text-xl">{lead}</div> : null}
         {children}
       </div>
+      <div className="phulkari-band" aria-hidden="true" />
     </header>
   );
 }
 
+/** Editorial section: a heavy top rule, heading left, intro right. */
 export function Section({
   id,
   title,
@@ -80,15 +86,19 @@ export function Section({
   return (
     <section id={id} aria-labelledby={title ? headingId : undefined} className={`container-ir py-12 md:py-16 ${className}`}>
       {title ? (
-        <div className="reveal mb-8 flex flex-wrap items-end justify-between gap-4">
-          <div className="max-w-2xl">
-            {eyebrow ? <p className="eyebrow">{eyebrow}</p> : null}
-            <h2 id={headingId} className="display-md mt-1">
+        <div className="reveal rule-t mb-10 grid gap-6 pt-6 md:grid-cols-[1fr_auto] md:items-end lg:grid-cols-[1.2fr_1fr]">
+          <div>
+            {eyebrow ? <p className="eyebrow mb-3">{eyebrow}</p> : null}
+            <h2 id={headingId} className="display-md">
               {title}
             </h2>
-            {intro ? <div className="mt-3 text-muted">{intro}</div> : null}
           </div>
-          {action}
+          {intro || action ? (
+            <div className="flex flex-col items-start gap-4 lg:items-end lg:text-right">
+              {intro ? <div className="max-w-md text-muted lg:ml-auto">{intro}</div> : null}
+              {action}
+            </div>
+          ) : null}
         </div>
       ) : null}
       {children}

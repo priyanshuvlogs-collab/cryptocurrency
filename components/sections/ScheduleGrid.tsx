@@ -72,7 +72,7 @@ export function ScheduleGrid({
   return (
     <div>
       <div role="group" aria-label={m.schedule.showTimesIn} className="flex flex-wrap items-center gap-2">
-        <span className="mr-1 font-semibold">{m.schedule.showTimesIn}:</span>
+        <span className="meta mr-2">{m.schedule.showTimesIn}</span>
         {TIMEZONE_PRESETS.map((p) => (
           <button
             key={p.id}
@@ -95,49 +95,69 @@ export function ScheduleGrid({
       </p>
       {hasUnconfirmed ? <p className="mt-2 text-sm font-semibold text-gold">{m.schedule.unconfirmedNote}</p> : null}
 
-      <ol className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+      {/* Departure-board timetable: one row per day. */}
+      <ol className="band-ink mt-8 overflow-hidden rounded-md">
         {days.map((day) => (
-          <li key={day.weekday} className={`card p-5 ${day.isToday ? "border-2 border-saffron" : ""}`}>
-            <h3 className="flex items-center justify-between text-lg font-extrabold">
+          <li
+            key={day.weekday}
+            className={`grid gap-3 border-b border-line px-5 py-5 last:border-b-0 md:grid-cols-[200px_1fr] md:gap-8 md:px-8 ${
+              day.isToday ? "bg-surface" : ""
+            }`}
+          >
+            <h3 className="flex items-center gap-3 font-display text-3xl leading-none font-extrabold uppercase md:text-4xl">
               {m.schedule.days[day.weekday]}
-              {day.isToday ? <span className="rounded-full bg-saffron px-2.5 py-0.5 text-xs text-on-saffron">{m.schedule.today}</span> : null}
+              {day.isToday ? <span className="meta rounded-sm bg-marigold px-2 py-1 text-ink">{m.schedule.today}</span> : null}
             </h3>
             {day.items.length ? (
-              <ul className="mt-3 grid gap-3">
+              <ul className="grid gap-3">
                 {day.items.map((occ) => {
                   const show = shows.find((s) => s.slug === occ.slot.showSlug);
                   const onAir = clientNow !== null && occ.start.getTime() <= clientNow && clientNow < occ.end.getTime();
                   return (
-                    <li key={occ.slot.id} className={`rounded-xl p-3 ${onAir ? "bg-live text-on-live" : "bg-surface-2"}`}>
-                      <p className="font-display text-xl font-extrabold tabular-nums" suppressHydrationWarning>
+                    <li
+                      key={occ.slot.id}
+                      className={`grid items-center gap-x-6 gap-y-1 border-l-4 py-1 pl-4 sm:grid-cols-[auto_1fr_auto] ${
+                        onAir ? "border-live" : "border-marigold"
+                      }`}
+                    >
+                      <p className="font-display text-4xl leading-none font-black tabular-nums text-marigold" suppressHydrationWarning>
                         <time dateTime={occ.start.toISOString()}>{formatTime(occ.start, tz, locale)}</time>
-                        {" – "}
-                        <time dateTime={occ.end.toISOString()}>{formatTime(occ.end, tz, locale)}</time>
+                        <span className="text-muted"> – </span>
+                        <time dateTime={occ.end.toISOString()} className="text-fg">
+                          {formatTime(occ.end, tz, locale)}
+                        </time>
                       </p>
-                      <p className="font-bold">
-                        {show ? (
-                          <Link href={`/${locale}/shows/${show.slug}`} className="underline-offset-2 hover:underline">
-                            {t(show.name, locale)}
-                          </Link>
-                        ) : (
-                          occ.slot.showSlug
-                        )}
-                      </p>
-                      <p className={`text-sm ${onAir ? "" : "text-muted"}`}>
-                        {show?.host}
-                        {occ.slot.live ? ` · ${m.player.live}` : ""}
-                        {show?.callIn ? (
-                          <>
-                            {" · "}
-                            <PhoneIcon size={14} className="inline" /> {m.nav.callIn}
-                          </>
-                        ) : null}
-                      </p>
-                      {onAir ? <p className="mt-1 text-sm font-extrabold uppercase">{m.schedule.liveNow}</p> : null}
-                      {!occ.slot.confirmed ? <p className="mt-1 text-xs font-semibold">[CONFIRM] {m.schedule.unconfirmed}</p> : null}
+                      <div>
+                        <p className="text-lg font-bold">
+                          {show ? (
+                            <Link href={`/${locale}/shows/${show.slug}`} className="underline-offset-4 hover:underline">
+                              {t(show.name, locale)}
+                            </Link>
+                          ) : (
+                            occ.slot.showSlug
+                          )}
+                          {onAir ? (
+                            <span className="meta ml-3 inline-flex items-center gap-1.5 rounded-sm bg-live px-2 py-0.5 align-middle text-on-live">
+                              <span className="onair-dot bg-white!" aria-hidden="true" />
+                              {m.schedule.liveNow}
+                            </span>
+                          ) : null}
+                        </p>
+                        <p className="text-sm text-muted">
+                          {show?.host}
+                          {occ.slot.live ? ` · ${m.player.live}` : ""}
+                          {show?.callIn ? (
+                            <>
+                              {" · "}
+                              <PhoneIcon size={13} className="inline" /> {m.nav.callIn}
+                            </>
+                          ) : null}
+                          {!occ.slot.confirmed ? <span className="text-gold"> · [CONFIRM] {m.schedule.unconfirmed}</span> : null}
+                        </p>
+                      </div>
                       <a
                         href={`/api/ics?slot=${encodeURIComponent(occ.slot.id)}`}
-                        className={`mt-2 inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold underline-offset-2 hover:underline ${onAir ? "" : "text-saffron"}`}
+                        className="inline-flex min-h-11 items-center gap-1.5 text-sm font-bold text-marigold underline-offset-4 hover:underline"
                       >
                         <CalendarIcon size={16} /> {m.cta.addToCalendar}
                       </a>
@@ -146,7 +166,7 @@ export function ScheduleGrid({
                 })}
               </ul>
             ) : (
-              <p className="mt-3 text-muted">{m.schedule.noShows}</p>
+              <p className="self-center text-muted">{m.schedule.noShows}</p>
             )}
           </li>
         ))}

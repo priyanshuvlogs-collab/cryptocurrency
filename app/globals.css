@@ -1,77 +1,120 @@
 @import "tailwindcss";
 
 /* ─────────────────────────────────────────────────────────────────────
-   Indi Radio design tokens – "Phulkari Night"
-   Every text/background pair below is checked to WCAG 2.1 AA (≥ 4.5:1).
-   See docs/02-design-system.md for the contrast table.
+   Indi Radio – "Midnight Broadcast"
+   Vintage Punjabi radio posters meets a modern newsroom: condensed
+   display type, paper + ink bands, marigold & rani-pink accents, and
+   phulkari embroidery used as real borders (not faint wallpaper).
+   All text pairs ≥ 4.5:1 (see docs/02-design-system.md).
    ───────────────────────────────────────────────────────────────────── */
 
 :root {
   color-scheme: light;
-  --bg: #fff8ef;
-  --surface: #ffffff;
-  --surface-2: #f8ebdd;
-  --text: #221018;
-  --text-muted: #6b4f52;
-  --border: #e7d3c3;
-  --saffron: #a34e00;
-  --on-saffron: #ffffff;
-  --red: #b3122a;
+  /* always-dark "broadcast" bands (hero, page headers, footer) */
+  --ink: #140b0e;
+  --ink-2: #22141a;
+  --ink-3: #2e1b23;
+  --on-ink: #f4ecdd;
+  --ink-muted: #bca89d;
+  --marigold: #ffa41b;
+
+  /* theme tokens – light = paper */
+  --bg: #f4ecdd;
+  --surface: #fbf6ec;
+  --surface-2: #eadfcb;
+  --text: #1a0f12;
+  --text-muted: #5e4a45;
+  --border: #d6c6ad;
+  --rule: #1a0f12;
+  --accent: #9a4a00; /* marigold for text on paper */
+  --saffron: var(--marigold); /* fills */
+  --on-saffron: #140b0e;
+  --red: #c8102e;
   --on-red: #ffffff;
-  --gold: #8a6400;
-  --magenta: #a3125f;
-  --green: #11794a;
+  --gold: #7a5a00;
+  --magenta: #b0005f;
+  --green: #0f7b4e;
   --on-green: #ffffff;
-  --glow: rgb(163 78 0 / 0.14);
-  --pattern-opacity: 0.07;
-  --hero-from: #fff1de;
-  --hero-to: #ffe2ec;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     color-scheme: dark;
-    --bg: #12090f;
-    --surface: #1e1119;
-    --surface-2: #2a1822;
-    --text: #fbefe3;
-    --text-muted: #c9b3a8;
-    --border: #3a2530;
-    --saffron: #ff9f1c;
-    --on-saffron: #12090f;
+    --bg: #140b0e;
+    --surface: #1d1116;
+    --surface-2: #2a1820;
+    --text: #f4ecdd;
+    --text-muted: #bca89d;
+    --border: #3b2630;
+    --rule: #f4ecdd;
+    --accent: #ffa41b;
     --red: #e0263a;
-    --on-red: #ffffff;
-    --gold: #f5c542;
-    --magenta: #f062a8;
-    --green: #2bb673;
-    --on-green: #12090f;
-    --glow: rgb(255 159 28 / 0.22);
-    --pattern-opacity: 0.09;
-    --hero-from: #2a0f1d;
-    --hero-to: #12090f;
+    --gold: #e8b931;
+    --magenta: #ff6fb5;
+    --green: #34c98a;
+    --on-green: #140b0e;
   }
 }
-
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --bg: #12090f;
-  --surface: #1e1119;
-  --surface-2: #2a1822;
-  --text: #fbefe3;
-  --text-muted: #c9b3a8;
-  --border: #3a2530;
-  --saffron: #ff9f1c;
-  --on-saffron: #12090f;
+  --bg: #140b0e;
+  --surface: #1d1116;
+  --surface-2: #2a1820;
+  --text: #f4ecdd;
+  --text-muted: #bca89d;
+  --border: #3b2630;
+  --rule: #f4ecdd;
+  --accent: #ffa41b;
   --red: #e0263a;
-  --on-red: #ffffff;
-  --gold: #f5c542;
-  --magenta: #f062a8;
-  --green: #2bb673;
-  --on-green: #12090f;
-  --glow: rgb(255 159 28 / 0.22);
-  --pattern-opacity: 0.09;
-  --hero-from: #2a0f1d;
-  --hero-to: #12090f;
+  --gold: #e8b931;
+  --magenta: #ff6fb5;
+  --green: #34c98a;
+  --on-green: #140b0e;
+}
+
+/* Any element with .band-ink re-themes everything inside it to night mode. */
+.band-ink {
+  --bg: var(--ink);
+  --surface: var(--ink-2);
+  --surface-2: var(--ink-3);
+  --text: var(--on-ink);
+  --text-muted: var(--ink-muted);
+  --border: rgb(244 236 221 / 0.14);
+  --rule: var(--on-ink);
+  --accent: var(--marigold);
+  --saffron: var(--marigold);
+  --on-saffron: #140b0e;
+  --red: #e0263a;
+  --gold: #e8b931;
+  --magenta: #ff6fb5;
+  --green: #34c98a;
+  --on-green: #140b0e;
+  background-color: var(--ink);
+  color: var(--on-ink);
+  position: relative;
+  isolation: isolate;
+}
+/* film grain on dark bands */
+.band-ink::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.09;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.band-marigold {
+  --bg: var(--marigold);
+  --text: #140b0e;
+  --text-muted: #3d2408;
+  --border: rgb(20 11 14 / 0.25);
+  --rule: #140b0e;
+  --accent: #140b0e;
+  --saffron: #140b0e;
+  --on-saffron: var(--marigold);
+  background: var(--marigold);
+  color: #140b0e;
 }
 
 @theme inline {
@@ -81,8 +124,12 @@
   --color-fg: var(--text);
   --color-muted: var(--text-muted);
   --color-line: var(--border);
+  --color-accent: var(--accent);
   --color-saffron: var(--saffron);
   --color-on-saffron: var(--on-saffron);
+  --color-marigold: var(--marigold);
+  --color-ink: var(--ink);
+  --color-on-ink: var(--on-ink);
   --color-live: var(--red);
   --color-on-live: var(--on-red);
   --color-gold: var(--gold);
@@ -90,12 +137,11 @@
   --color-whatsapp: var(--green);
   --color-on-whatsapp: var(--on-green);
 
-  /* Latin glyphs come from the first font, Gurmukhi falls through to the next. */
-  --font-sans: var(--font-inter), var(--font-gurmukhi-body), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-anybody), var(--font-gurmukhi-display), var(--font-inter), sans-serif;
+  --font-sans: var(--font-body-latin), var(--font-gurmukhi-body), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-display-latin), var(--font-gurmukhi-display), var(--font-body-latin), sans-serif;
+  --font-serif: var(--font-serif), var(--font-gurmukhi-body), Georgia, serif;
 
-  --radius-card: 14px;
-  --shadow-glow: 0 10px 40px -12px var(--glow);
+  --radius-card: 6px;
 }
 
 @layer base {
@@ -111,7 +157,6 @@
     font-size: 1.0625rem;
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
-    /* room for the sticky mini-player on mobile */
     padding-bottom: calc(72px + env(safe-area-inset-bottom));
   }
   @media (min-width: 768px) {
@@ -121,19 +166,17 @@
   }
   :lang(pa) body,
   body:lang(pa) {
-    line-height: 1.75; /* room for Gurmukhi matras */
+    line-height: 1.75;
   }
   h1,
   h2,
   h3 {
     font-family: var(--font-display);
-    line-height: 1.08;
-    letter-spacing: -0.01em;
+    line-height: 0.95;
     text-wrap: balance;
   }
   :lang(pa) :is(h1, h2, h3) {
-    line-height: 1.3;
-    letter-spacing: 0;
+    line-height: 1.25;
   }
   p {
     text-wrap: pretty;
@@ -142,103 +185,161 @@
     color: inherit;
   }
   :focus-visible {
-    outline: 3px solid var(--saffron);
+    outline: 3px solid var(--accent);
     outline-offset: 3px;
-    border-radius: 6px;
+    border-radius: 2px;
   }
   ::selection {
-    background: var(--saffron);
-    color: var(--on-saffron);
+    background: var(--marigold);
+    color: #140b0e;
   }
 }
 
 @layer components {
   .container-ir {
     width: 100%;
-    max-width: 1200px;
+    max-width: 1280px;
     margin-inline: auto;
     padding-inline: 1rem;
   }
   @media (min-width: 768px) {
     .container-ir {
-      padding-inline: 1.5rem;
+      padding-inline: 2rem;
     }
   }
 
-  .display-xl {
-    font-size: clamp(2.5rem, 7vw + 0.5rem, 5.5rem);
-    font-weight: 900;
-    font-stretch: 80%;
+  /* ── Type ─────────────────────────────────────────────────────────── */
+  .display-xl,
+  .display-lg,
+  .display-md {
+    font-family: var(--font-display);
+    font-weight: 800;
     text-transform: uppercase;
+    letter-spacing: -0.005em;
   }
-  :lang(pa) .display-xl {
-    text-transform: none;
-    font-size: clamp(2.2rem, 6vw + 0.5rem, 4.5rem);
+  .display-xl {
+    font-size: clamp(4.2rem, 16vw, 9.5rem);
+    line-height: 0.84;
   }
   .display-lg {
-    font-size: clamp(2rem, 4vw + 0.75rem, 3.5rem);
-    font-weight: 850;
-    font-stretch: 85%;
+    font-size: clamp(2.8rem, 7vw + 0.5rem, 6rem);
+    line-height: 0.88;
   }
   .display-md {
-    font-size: clamp(1.5rem, 2vw + 0.9rem, 2.25rem);
-    font-weight: 800;
-    font-stretch: 90%;
+    font-size: clamp(2rem, 3.4vw + 0.8rem, 3.4rem);
+    line-height: 0.92;
   }
+  :lang(pa) :is(.display-xl, .display-lg, .display-md) {
+    text-transform: none;
+    letter-spacing: 0;
+    line-height: 1.12;
+  }
+  :lang(pa) .display-xl {
+    font-size: clamp(2.6rem, 8.5vw + 0.5rem, 6.4rem);
+  }
+  :lang(pa) .display-lg {
+    font-size: clamp(2.2rem, 5vw + 0.5rem, 4.4rem);
+  }
+  :lang(pa) .display-md {
+    font-size: clamp(1.7rem, 2.4vw + 0.8rem, 2.6rem);
+  }
+  /* editorial italic accent, e.g. "from Surrey, Canada" */
+  .serif {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: -0.01em;
+  }
+  /* small broadcast caption: ── LABEL */
   .eyebrow {
-    font-size: 0.8125rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.78rem;
     font-weight: 700;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
-    color: var(--gold);
+    color: var(--accent);
+  }
+  .eyebrow::before {
+    content: "";
+    width: 1.75rem;
+    height: 2px;
+    background: currentColor;
   }
   :lang(pa) .eyebrow {
     letter-spacing: 0.02em;
-    font-size: 0.9375rem;
+    font-size: 0.95rem;
+    text-transform: none;
+  }
+  .meta {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
+  }
+  :lang(pa) .meta {
+    letter-spacing: 0.02em;
+    font-size: 0.875rem;
+    text-transform: none;
   }
 
+  /* ── Buttons ──────────────────────────────────────────────────────── */
   .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 0.6rem;
-    min-height: 48px;
-    padding: 0.75rem 1.4rem;
-    border-radius: 999px;
-    font-weight: 700;
-    font-size: 1rem;
-    line-height: 1.2;
+    min-height: 50px;
+    padding: 0.7rem 1.35rem;
+    border-radius: 4px;
+    font-weight: 800;
+    font-size: 0.9375rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    line-height: 1.1;
+    white-space: nowrap;
     text-decoration: none;
     border: 2px solid transparent;
     cursor: pointer;
     transition:
       transform 0.15s ease,
-      box-shadow 0.2s ease,
-      background-color 0.2s ease;
+      box-shadow 0.15s ease,
+      background-color 0.2s ease,
+      color 0.2s ease;
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
   }
+  :lang(pa) .btn {
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 1rem;
+  }
   .btn:hover {
-    transform: translateY(-1px);
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0 var(--rule);
   }
   .btn:active {
-    transform: translateY(1px) scale(0.98);
+    transform: none;
+    box-shadow: none;
   }
   .btn[disabled],
   .btn[aria-disabled="true"] {
     opacity: 0.6;
     cursor: not-allowed;
     transform: none;
+    box-shadow: none;
   }
   .btn-lg {
     min-height: 58px;
-    padding: 0.9rem 1.8rem;
-    font-size: 1.125rem;
+    padding: 0.85rem 1.7rem;
+    font-size: 1rem;
   }
   .btn-primary {
     background: var(--saffron);
     color: var(--on-saffron);
-    box-shadow: var(--shadow-glow);
   }
   .btn-live {
     background: var(--red);
@@ -251,61 +352,73 @@
   .btn-ghost {
     background: transparent;
     color: var(--text);
-    border-color: var(--border);
-  }
-  .btn-ghost:hover {
-    border-color: var(--saffron);
+    border-color: var(--rule);
   }
 
+  /* ── Surfaces ─────────────────────────────────────────────────────── */
   .card {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius-card);
   }
+  .rule-t {
+    border-top: 2px solid var(--rule);
+  }
+  .rule-b {
+    border-bottom: 1px solid var(--border);
+  }
+
   .chip {
     display: inline-flex;
     align-items: center;
     min-height: 44px;
-    padding: 0.5rem 1rem;
-    border-radius: 999px;
+    padding: 0.45rem 0.95rem;
+    border-radius: 4px;
     border: 1.5px solid var(--border);
-    font-weight: 600;
-    font-size: 0.9375rem;
-    background: var(--surface);
+    font-weight: 700;
+    font-size: 0.875rem;
+    background: transparent;
     color: var(--text);
     cursor: pointer;
+  }
+  .chip:hover {
+    border-color: var(--rule);
   }
   .chip[aria-pressed="true"],
   .chip[aria-selected="true"],
   .chip[aria-current="page"] {
-    background: var(--magenta);
-    border-color: var(--magenta);
+    background: var(--text);
+    border-color: var(--text);
     color: var(--bg);
   }
 
+  /* ── Forms ────────────────────────────────────────────────────────── */
   .field {
     display: grid;
     gap: 0.35rem;
   }
   .field label,
   .field legend {
-    font-weight: 600;
+    font-weight: 700;
     font-size: 0.9375rem;
   }
   .input {
     width: 100%;
-    min-height: 48px;
+    min-height: 50px;
     padding: 0.7rem 0.9rem;
-    border-radius: 10px;
+    border-radius: 4px;
     border: 1.5px solid var(--border);
     background: var(--surface);
     color: var(--text);
     font: inherit;
   }
+  .input:hover {
+    border-color: var(--text-muted);
+  }
   .input:focus-visible {
-    outline: 3px solid var(--saffron);
+    outline: 3px solid var(--accent);
     outline-offset: 1px;
-    border-color: var(--saffron);
+    border-color: var(--text);
   }
   .input[aria-invalid="true"] {
     border-color: var(--red);
@@ -313,32 +426,38 @@
   .field-error {
     color: var(--red);
     font-size: 0.875rem;
-    font-weight: 600;
+    font-weight: 700;
   }
 
-  .phulkari {
-    position: relative;
-    isolation: isolate;
+  /* ── Phulkari embroidery band (real border, not wallpaper) ────────── */
+  .phulkari-band {
+    height: 18px;
+    background-color: var(--ink);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='18' viewBox='0 0 36 18'%3E%3Cpath d='M0 18 9 7l9 11Z' fill='%23FFA41B'/%3E%3Cpath d='M18 18l9-11 9 11Z' fill='%23E4007C'/%3E%3Cpath d='M9 0l3 3.5L9 7 6 3.5Z' fill='%23E8B931'/%3E%3Cpath d='M27 0l3 3.5L27 7l-3-3.5Z' fill='%23FFA41B'/%3E%3Ccircle cx='18' cy='3.5' r='1.4' fill='%23F4ECDD'/%3E%3C/svg%3E");
+    background-size: 36px 18px;
+    background-repeat: repeat-x;
   }
-  .phulkari::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    opacity: var(--pattern-opacity);
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56'%3E%3Cg fill='none' stroke='%23FF9F1C' stroke-width='2'%3E%3Cpath d='M28 4 52 28 28 52 4 28Z'/%3E%3Cpath d='M28 16 40 28 28 40 16 28Z' stroke='%23E0348F'/%3E%3C/g%3E%3Cpath d='M28 24 32 28 28 32 24 28Z' fill='%23F5C542'/%3E%3C/svg%3E");
-    background-size: 56px 56px;
-    mask-image: radial-gradient(ellipse at 70% 30%, #000 20%, transparent 75%);
+  /* dense lattice for fills (disc label, placeholders) */
+  .phulkari-fill {
+    background-color: var(--marigold);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Cpath d='M14 1 27 14 14 27 1 14Z' fill='none' stroke='%23E4007C' stroke-width='2.2'/%3E%3Cpath d='M14 8 20 14 14 20 8 14Z' fill='%23C8102E'/%3E%3Cpath d='M14 11.5 16.5 14 14 16.5 11.5 14Z' fill='%23E8B931'/%3E%3C/svg%3E");
+    background-size: 28px 28px;
   }
-  .border-phulkari {
-    height: 6px;
-    background: repeating-linear-gradient(
-      90deg,
-      var(--saffron) 0 18px,
-      var(--magenta) 18px 36px,
-      var(--gold) 36px 54px,
-      var(--red) 54px 72px
-    );
+
+  /* ── FM dial (decorative) ─────────────────────────────────────────── */
+  .dial {
+    height: 34px;
+    background-image:
+      repeating-linear-gradient(90deg, currentColor 0 1px, transparent 1px 12px),
+      repeating-linear-gradient(90deg, currentColor 0 2px, transparent 2px 60px);
+    background-size:
+      100% 12px,
+      100% 22px;
+    background-repeat: no-repeat;
+    background-position:
+      0 100%,
+      0 100%;
+    opacity: 0.45;
   }
 
   .prose-ir {
@@ -348,54 +467,100 @@
     margin-top: 1.1em;
   }
   .prose-ir h2 {
-    font-size: 1.6rem;
+    font-size: clamp(1.8rem, 2vw + 1rem, 2.4rem);
     font-weight: 800;
-    margin-top: 2em;
+    text-transform: uppercase;
+    margin-top: 1.8em;
+  }
+  :lang(pa) .prose-ir h2 {
+    text-transform: none;
+    font-size: 1.7rem;
   }
   .prose-ir h3 {
-    font-size: 1.2rem;
+    font-size: 1.35rem;
     font-weight: 800;
     margin-top: 1.6em;
   }
   .prose-ir a {
-    color: var(--saffron);
+    color: var(--accent);
     text-decoration: underline;
     text-underline-offset: 3px;
   }
   .prose-ir ul {
-    list-style: disc;
-    padding-left: 1.25rem;
+    list-style: none;
+    padding-left: 0;
+  }
+  .prose-ir ul > li {
+    position: relative;
+    padding-left: 1.4rem;
+  }
+  .prose-ir ul > li::before {
+    content: "";
+    position: absolute;
+    left: 0.15rem;
+    top: 0.62em;
+    width: 0.5rem;
+    height: 0.5rem;
+    background: var(--marigold);
+    transform: rotate(45deg);
   }
   .prose-ir li + li {
-    margin-top: 0.35em;
+    margin-top: 0.45em;
   }
   .link {
-    color: var(--saffron);
-    font-weight: 600;
+    color: var(--accent);
+    font-weight: 700;
     text-decoration: underline;
-    text-underline-offset: 3px;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
+  }
+
+  /* ── Ticket stub (dedications) ────────────────────────────────────── */
+  .ticket {
+    --notch: 14px;
+    background: var(--surface);
+    border-radius: 6px;
+    mask:
+      radial-gradient(circle var(--notch) at 0 var(--notch-y, 62%), #0000 98%, #000) left / 51% 100% no-repeat,
+      radial-gradient(circle var(--notch) at 100% var(--notch-y, 62%), #0000 98%, #000) right / 51% 100% no-repeat;
+  }
+  .ticket-perf {
+    border-top: 2px dashed var(--border);
   }
 }
 
-/* ─── Motion ────────────────────────────────────────────────────────── */
+/* ─── Motion ───────────────────────────────────────────────────────── */
 
 @keyframes onair-pulse {
   0% {
     box-shadow: 0 0 0 0 color-mix(in srgb, var(--red) 70%, transparent);
   }
   70% {
-    box-shadow: 0 0 0 12px transparent;
+    box-shadow: 0 0 0 10px transparent;
   }
   100% {
     box-shadow: 0 0 0 0 transparent;
   }
 }
 .onair-dot {
-  width: 10px;
-  height: 10px;
+  width: 9px;
+  height: 9px;
   border-radius: 999px;
   background: var(--red);
   animation: onair-pulse 1.6s ease-out infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.disc-spin {
+  animation: spin 7s linear infinite;
+  animation-play-state: paused;
+}
+.is-playing .disc-spin {
+  animation-play-state: running;
 }
 
 @keyframes wave {
@@ -410,24 +575,22 @@
 .wave-bar {
   transform-origin: bottom;
   transform: scaleY(0.25);
-  will-change: transform;
 }
 .is-playing .wave-bar {
   animation: wave var(--dur, 1s) ease-in-out infinite;
   animation-delay: var(--delay, 0s);
 }
 .is-idle .wave-bar {
-  animation: wave calc(var(--dur, 1s) * 3) ease-in-out infinite;
-  animation-delay: var(--delay, 0s);
+  transform: scaleY(var(--static, 0.4));
   opacity: 0.5;
 }
 
 .reveal {
   opacity: 0;
-  transform: translateY(12px);
+  transform: translateY(16px);
   transition:
-    opacity 0.6s ease,
-    transform 0.6s ease;
+    opacity 0.7s ease,
+    transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 .reveal.is-visible {
   opacity: 1;
@@ -444,7 +607,7 @@ html:not(.js) .reveal {
   }
 }
 .marquee-track {
-  animation: marquee 40s linear infinite;
+  animation: marquee 38s linear infinite;
 }
 .marquee:hover .marquee-track {
   animation-play-state: paused;
@@ -459,11 +622,12 @@ html:not(.js) .reveal {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-  .onair-dot {
-    animation: none;
+  .onair-dot,
+  .disc-spin,
+  .marquee-track {
+    animation: none !important;
   }
-  .is-playing .wave-bar,
-  .is-idle .wave-bar {
+  .is-playing .wave-bar {
     animation: none;
     transform: scaleY(var(--static, 0.6));
   }
@@ -471,8 +635,8 @@ html:not(.js) .reveal {
     opacity: 1;
     transform: none;
   }
-  .marquee-track {
-    animation: none;
+  .btn:hover {
+    transform: none;
   }
 }
 
@@ -485,7 +649,6 @@ html:not(.js) .reveal {
   white-space: nowrap;
 }
 
-/* Theme-toggle icons follow the resolved theme set by the inline head script. */
 .icon-when-dark {
   display: none;
 }

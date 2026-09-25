@@ -3,8 +3,9 @@ import type { Metadata } from "next";
 import { LiveHero } from "@/components/sections/Hero";
 import { EpisodeGrid, JoinSection, SocialStrip, SponsorStrip, TierCards } from "@/components/sections/Shared";
 import { NextShowCountdown } from "@/components/player/PlayerControls";
+import { WorldClocks } from "@/components/player/WorldClocks";
 import { Section } from "@/components/ui/Page";
-import { ArrowRightIcon, CalendarIcon, PhoneIcon } from "@/components/ui/Icons";
+import { ArrowRightIcon } from "@/components/ui/Icons";
 import { getDedicationTiers, getSettings, getShows, getSocialPosts, getSponsors } from "@/lib/cms";
 import { getMessages } from "@/lib/i18n";
 import { pageMetadata } from "@/lib/seo";
@@ -80,25 +81,28 @@ export default async function HomePage({ params }: Props) {
     <>
       <LiveHero locale={locale} m={m} settings={settings} />
 
-      <section aria-label={m.countdown.nextShow} className="container-ir -mt-2 grid gap-4 py-10 md:grid-cols-3">
-        <div className="card p-6">
-          <NextShowCountdown />
-        </div>
-        <div className="card flex flex-col p-6">
-          <PhoneIcon className="text-live" size={28} />
-          <h2 className="mt-3 text-xl font-extrabold">{c.callTitle}</h2>
-          <p className="mt-2 flex-1 text-muted">{c.callBody}</p>
-          <Link href={`/${locale}/call-in`} className="link mt-4 inline-flex items-center gap-1">
-            {m.nav.callIn} <ArrowRightIcon size={16} />
-          </Link>
-        </div>
-        <div className="card flex flex-col p-6">
-          <CalendarIcon className="text-magenta" size={28} />
-          <h2 className="mt-3 text-xl font-extrabold">{c.tzTitle}</h2>
-          <p className="mt-2 flex-1 text-muted">{c.tzBody}</p>
-          <Link href={`/${locale}/schedule`} className="link mt-4 inline-flex items-center gap-1">
-            {m.cta.seeSchedule} <ArrowRightIcon size={16} />
-          </Link>
+      <section aria-label={m.countdown.nextShow} className="container-ir py-14 md:py-20">
+        <div className="grid gap-12 md:grid-cols-3 md:gap-0 md:divide-x-2 md:divide-fg">
+          <div className="reveal md:pr-8">
+            <NextShowCountdown />
+          </div>
+          <div className="reveal flex flex-col md:px-8">
+            <p className="eyebrow">{c.callTitle}</p>
+            <a href={`tel:${settings.phoneE164}`} className="mt-3 font-display text-[3.4rem] leading-none font-black tabular-nums hover:text-accent">
+              {settings.phoneDisplay}
+            </a>
+            <p className="mt-4 flex-1 text-muted">{c.callBody}</p>
+            <Link href={`/${locale}/call-in`} className="link mt-4 inline-flex items-center gap-1">
+              {m.nav.callIn} <ArrowRightIcon size={16} />
+            </Link>
+          </div>
+          <div className="reveal flex flex-col md:pl-8">
+            <p className="eyebrow mb-4">{c.tzTitle}</p>
+            <WorldClocks />
+            <Link href={`/${locale}/schedule`} className="link mt-6 inline-flex items-center gap-1">
+              {m.cta.seeSchedule} <ArrowRightIcon size={16} />
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -122,14 +126,15 @@ export default async function HomePage({ params }: Props) {
       <SponsorStrip sponsors={sponsors} locale={locale} m={m} />
 
       <Section id="facts" eyebrow={c.factsEyebrow} title={c.factsTitle}>
-        <dl className="reveal grid gap-px overflow-hidden rounded-[var(--radius-card)] border border-line bg-line sm:grid-cols-2 lg:grid-cols-5">
-          {c.facts.map(([term, def]) => (
-            <div key={term} className="bg-surface p-5">
-              <dt className="eyebrow">{term}</dt>
-              <dd className="mt-2">{def}</dd>
-            </div>
+        <ol className="grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-5">
+          {c.facts.map(([term, def], i) => (
+            <li key={term} className="reveal border-t-2 border-fg pt-4">
+              <p className="font-display text-6xl leading-none font-black text-accent">{String(i + 1).padStart(2, "0")}</p>
+              <h3 className="meta mt-4">{term}</h3>
+              <p className="mt-2">{def}</p>
+            </li>
           ))}
-        </dl>
+        </ol>
       </Section>
 
       <JoinSection settings={settings} locale={locale} m={m} />

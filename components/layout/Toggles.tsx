@@ -18,7 +18,7 @@ export function LanguageToggle({ className = "" }: { className?: string }) {
       onClick={() => {
         document.cookie = `NEXT_LOCALE=${target};path=/;max-age=31536000;samesite=lax`;
       }}
-      className={`grid min-h-11 min-w-11 place-items-center rounded-full border border-line px-3 text-sm font-bold hover:border-saffron ${className}`}
+      className={`grid min-h-11 min-w-11 place-items-center rounded-sm border-2 border-line px-3 text-sm font-extrabold hover:border-fg ${className}`}
     >
       <span aria-hidden="true">{m.otherLangShort}</span>
       <span className="sr-only">{m.otherLangName}</span>
@@ -40,7 +40,7 @@ export function ThemeToggle({ className = "" }: { className?: string }) {
           localStorage.setItem("ir-theme", next);
         } catch {}
       }}
-      className={`grid size-11 place-items-center rounded-full border border-line hover:border-saffron ${className}`}
+      className={`grid size-11 place-items-center rounded-sm border-2 border-line hover:border-fg ${className}`}
     >
       <SunIcon className="icon-when-dark" />
       <MoonIcon className="icon-when-light" />

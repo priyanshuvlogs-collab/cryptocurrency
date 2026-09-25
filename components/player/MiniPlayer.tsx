@@ -28,19 +28,25 @@ export function MiniPlayer() {
   return (
     <aside
       aria-label={m.player.miniPlayer}
-      className={`fixed inset-x-0 bottom-0 z-40 border-t border-line bg-surface/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md md:inset-x-auto md:right-4 md:bottom-4 md:w-[380px] md:rounded-2xl md:border md:shadow-2xl ${
+      className={`band-ink fixed inset-x-0 bottom-0 z-40 border-t-2 border-marigold pb-[env(safe-area-inset-bottom)] md:inset-x-auto md:right-5 md:bottom-5 md:w-[400px] md:rounded-md md:border-2 md:shadow-[6px_6px_0_var(--marigold)] ${
         started ? "" : "md:hidden"
-      }`}
+      } ${isLive ? "is-playing" : ""}`}
     >
       <div className="flex h-[72px] items-center gap-3 px-3">
-        <PlayButton variant="mini" />
+        <span
+          aria-hidden="true"
+          className="disc-spin phulkari-fill relative size-11 shrink-0 rounded-full ring-[5px] ring-black"
+        >
+          <span className="absolute inset-[38%] rounded-full bg-ink" />
+        </span>
         <div className="min-w-0 flex-1">
-          <p className="flex items-center gap-2 text-xs font-bold tracking-wider text-live uppercase">
-            <span className={isLive ? "onair-dot" : "size-2.5 rounded-full bg-live"} aria-hidden="true" />
+          <p className="meta flex items-center gap-2 font-extrabold text-marigold">
+            <span className={isLive ? "onair-dot" : "size-2 rounded-full bg-live"} aria-hidden="true" />
             {m.player.live} · Indi Radio
           </p>
-          <p className="truncate font-semibold">{title}</p>
+          <p className="truncate font-display text-xl leading-tight font-extrabold uppercase">{title}</p>
         </div>
+        <PlayButton variant="mini" />
         <VolumeControl />
       </div>
     </aside>

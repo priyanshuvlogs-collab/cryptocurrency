@@ -63,10 +63,10 @@ export default async function FaqPage({ params }: Props) {
                 <div className="mt-5 space-y-3">
                   {g.items.map((f) => (
                     // Answers are always in the HTML (not fetched on open), so crawlers and AI engines can read them.
-                    <details key={f.id} id={f.id} className="card group p-5 open:border-saffron">
+                    <details key={f.id} id={f.id} className="card group p-5 open:border-fg">
                       <summary className="flex cursor-pointer list-none items-start justify-between gap-4 text-lg font-bold">
                         <h3>{t(f.q, locale)}</h3>
-                        <span aria-hidden="true" className="mt-1 text-saffron transition group-open:rotate-45">
+                        <span aria-hidden="true" className="mt-1 text-accent transition group-open:rotate-45">
                           +
                         </span>
                       </summary>

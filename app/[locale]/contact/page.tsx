@@ -67,13 +67,13 @@ export default async function ContactPage({ params }: Props) {
             <ul className="grid gap-3">
               {channels.map(({ Icon, label, value, href }) => (
                 <li key={label} className="card flex items-center gap-4 p-4">
-                  <span className="grid size-11 shrink-0 place-items-center rounded-full bg-surface-2 text-saffron">
+                  <span className="grid size-11 shrink-0 place-items-center rounded-full bg-surface-2 text-accent">
                     <Icon />
                   </span>
                   <div className="min-w-0">
                     <p className="text-sm text-muted">{label}</p>
                     {href ? (
-                      <a href={href} className="font-bold break-words hover:text-saffron" {...(href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}>
+                      <a href={href} className="font-bold break-words hover:text-accent" {...(href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}>
                         {value}
                       </a>
                     ) : (

@@ -49,10 +49,19 @@ export default async function ShowsPage({ params }: Props) {
           {shows.map((show) => {
             const count = slots.filter((s) => s.showSlug === show.slug).length;
             return (
-              <li key={show.slug} className={`reveal card phulkari flex flex-col overflow-hidden p-6 md:p-8 ${show.featured ? "md:col-span-2" : ""}`}>
+              <li key={show.slug} className={`reveal relative flex flex-col overflow-hidden rounded-md p-6 md:p-10 ${show.featured ? "band-ink md:col-span-2" : "border-2 border-fg bg-surface"}`}>
+                {show.featured && show.nativeName ? (
+                  <span
+                    aria-hidden="true"
+                    lang="pa"
+                    className="pointer-events-none absolute -right-6 -bottom-10 -z-10 hidden font-display text-[9rem] leading-none text-marigold opacity-20 md:block lg:text-[13rem]"
+                  >
+                    {show.nativeName}
+                  </span>
+                ) : null}
                 {show.featured ? <p className="eyebrow">{c.flagship}</p> : null}
                 <h2 className="display-md mt-1">
-                  <Link href={`/${locale}/shows/${show.slug}`} className="hover:text-saffron">
+                  <Link href={`/${locale}/shows/${show.slug}`} className="hover:text-accent">
                     {t(show.name, locale)}
                   </Link>
                 </h2>
@@ -66,9 +75,9 @@ export default async function ShowsPage({ params }: Props) {
                   <span>
                     {m.player.withHost} {show.host}
                   </span>
-                  {count ? <span className="rounded-full bg-surface-2 px-3 py-1">{c.weekly(count)}</span> : null}
+                  {count ? <span className="meta rounded-sm bg-surface-2 px-2.5 py-1.5">{c.weekly(count)}</span> : null}
                   {show.callIn ? (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-live px-3 py-1 text-on-live">
+                    <span className="meta inline-flex items-center gap-1 rounded-sm bg-live px-2.5 py-1.5 text-on-live">
                       <PhoneIcon size={14} /> {m.nav.callIn}
                     </span>
                   ) : null}

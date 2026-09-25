@@ -97,11 +97,11 @@ export default async function IndiPage({ params }: Props) {
       <Section id="story">
         <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr]">
           <figure>
-            <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] border border-line bg-surface">
+            <div className="relative aspect-[4/5] overflow-hidden rounded-md border border-line bg-surface">
               {settings.hostImage ? (
                 <Image src={settings.hostImage} alt={c.photoAlt} fill sizes="(min-width: 1024px) 420px, 100vw" className="object-cover" />
               ) : (
-                <div className="phulkari grid size-full place-items-center">
+                <div className="phulkari-fill grid size-full place-items-center">
                   <span className="grid size-28 place-items-center rounded-full bg-saffron text-on-saffron">
                     <MicIcon size={56} />
                   </span>
@@ -130,7 +130,7 @@ export default async function IndiPage({ params }: Props) {
           <ul className="grid gap-3">
             {press.map((p) => (
               <li key={p.url} className="card p-5">
-                <a href={p.url} target="_blank" rel="noopener noreferrer" className="font-bold hover:text-saffron">
+                <a href={p.url} target="_blank" rel="noopener noreferrer" className="font-bold hover:text-accent">
                   {p.title}
                 </a>
                 <p className="text-sm text-muted">

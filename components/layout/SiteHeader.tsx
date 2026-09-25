@@ -24,14 +24,14 @@ export function SiteHeader({ phoneDisplay, phoneE164, whatsappUrl }: { phoneDisp
   }, [pathname]);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-line bg-bg/90 backdrop-blur-md">
-      <div className="container-ir flex h-16 items-center gap-3">
+    <header className="sticky top-0 z-40 border-b-2 border-fg bg-bg/95 backdrop-blur-md">
+      <div className="container-ir flex h-[68px] items-center gap-3">
         <Link href={href("")} className="shrink-0 rounded-md">
           <Logo />
           <span className="sr-only"> {m.nav.home}</span>
         </Link>
         {status === "playing" ? (
-          <span className="hidden items-center gap-1.5 rounded-full bg-live px-2.5 py-0.5 text-xs font-extrabold text-on-live sm:inline-flex">
+          <span className="meta hidden items-center gap-1.5 rounded-sm bg-live px-2 py-1 font-extrabold text-on-live sm:inline-flex">
             <span className="onair-dot bg-white!" aria-hidden="true" />
             {m.player.live}
           </span>
@@ -44,7 +44,7 @@ export function SiteHeader({ phoneDisplay, phoneE164, whatsappUrl }: { phoneDisp
                 <Link
                   href={href(item.path)}
                   aria-current={isCurrent(item.path) ? "page" : undefined}
-                  className="rounded-full px-3 py-2 text-[0.9375rem] font-semibold hover:text-saffron aria-[current=page]:text-saffron"
+                  className="relative px-2.5 py-2 text-[0.9rem] font-bold hover:text-accent aria-[current=page]:after:absolute aria-[current=page]:after:inset-x-2.5 aria-[current=page]:after:-bottom-[15px] aria-[current=page]:after:h-[3px] aria-[current=page]:after:bg-marigold"
                 >
                   {m.nav[item.key]}
                 </Link>
@@ -54,7 +54,7 @@ export function SiteHeader({ phoneDisplay, phoneE164, whatsappUrl }: { phoneDisp
         </nav>
 
         <div className="ml-auto flex items-center gap-2 lg:ml-2">
-          <a href={`tel:${phoneE164}`} className="btn btn-live hidden min-h-11! px-4! py-2! text-sm md:inline-flex">
+          <a href={`tel:${phoneE164}`} className="btn btn-live hidden min-h-11! px-4! py-2! text-[0.8rem]! md:inline-flex">
             <PhoneIcon size={18} />
             {m.cta.callIn}
           </a>
@@ -64,7 +64,7 @@ export function SiteHeader({ phoneDisplay, phoneE164, whatsappUrl }: { phoneDisp
             type="button"
             onClick={() => dialogRef.current?.showModal()}
             aria-haspopup="dialog"
-            className="grid size-11 place-items-center rounded-full border border-line lg:hidden"
+            className="grid size-11 place-items-center rounded-sm border-2 border-fg lg:hidden"
           >
             <MenuIcon />
             <span className="sr-only">{m.nav.menu}</span>
@@ -75,7 +75,7 @@ export function SiteHeader({ phoneDisplay, phoneE164, whatsappUrl }: { phoneDisp
       <dialog
         ref={dialogRef}
         aria-label={m.nav.menu}
-        className="m-0 ml-auto h-dvh max-h-none w-[min(22rem,100vw)] max-w-none bg-surface p-0 text-fg backdrop:bg-black/60 lg:hidden"
+        className="band-ink m-0 ml-auto h-dvh max-h-none w-[min(24rem,100vw)] max-w-none p-0 backdrop:bg-black/70 lg:hidden"
         onClick={(e) => {
           if (e.target === dialogRef.current) dialogRef.current?.close();
         }}
@@ -86,7 +86,7 @@ export function SiteHeader({ phoneDisplay, phoneE164, whatsappUrl }: { phoneDisp
             <button
               type="button"
               onClick={() => dialogRef.current?.close()}
-              className="grid size-11 place-items-center rounded-full border border-line"
+              className="grid size-11 place-items-center rounded-sm border border-line"
             >
               <CloseIcon />
               <span className="sr-only">{m.nav.close}</span>
@@ -99,7 +99,7 @@ export function SiteHeader({ phoneDisplay, phoneE164, whatsappUrl }: { phoneDisp
                   <Link
                     href={href(item.path)}
                     aria-current={isCurrent(item.path) ? "page" : undefined}
-                    className="flex min-h-12 items-center rounded-xl px-3 text-lg font-semibold hover:bg-surface-2 aria-[current=page]:text-saffron"
+                    className="flex min-h-13 items-center border-b border-line px-3 font-display text-3xl font-extrabold uppercase hover:text-marigold aria-[current=page]:text-marigold"
                   >
                     {m.nav[item.key]}
                   </Link>

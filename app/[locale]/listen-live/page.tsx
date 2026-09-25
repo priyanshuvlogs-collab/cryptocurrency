@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Disc } from "@/components/player/Disc";
 import { NextShowCountdown, NowPlaying, OnAirBadge, PlayButton, PlayerStatusText, VolumeControl, Waveform } from "@/components/player/PlayerControls";
 import { WatchLiveInline } from "@/components/player/LiveStatus";
 import { PageHeader, Section } from "@/components/ui/Page";
@@ -89,28 +90,33 @@ export default async function ListenLivePage({ params }: Props) {
       <PageHeader locale={locale} m={m} crumbs={[{ name: m.nav.listenLive, path: PAGES.listenLive.path }]} title={c.h1} lead={c.lead} />
 
       <section aria-label={m.player.miniPlayer} className="container-ir py-10">
-        <div className="card phulkari overflow-hidden p-6 md:p-10">
+        <div className="band-ink grid items-center gap-10 overflow-hidden rounded-md p-6 md:p-10 lg:grid-cols-[380px_1fr]">
+          <div className="mx-auto w-full max-w-[380px]">
+            <Disc />
+          </div>
+          <div>
           <div className="flex flex-wrap items-center justify-between gap-4">
             <OnAirBadge />
             <VolumeControl />
           </div>
-          <div className="mt-6 grid items-end gap-8 lg:grid-cols-[1fr_auto]">
+          <div className="mt-6 grid items-end gap-8 border-y border-line py-6 lg:grid-cols-[1fr_auto]">
             <NowPlaying />
-            <Waveform className="h-20" />
+            <Waveform className="h-16" />
           </div>
           <div className="mt-8 flex flex-wrap gap-3">
             <PlayButton />
             <a href={`tel:${settings.phoneE164}`} className="btn btn-live btn-lg">
-              <PhoneIcon size={22} /> {m.cta.callIn}: {settings.phoneDisplay}
+              <PhoneIcon size={22} /> {m.cta.callIn} {settings.phoneDisplay}
             </a>
           </div>
           <PlayerStatusText className="mt-3" />
           <div className="mt-4">
             <WatchLiveInline />
           </div>
+          </div>
         </div>
-        <div className="mt-4 card p-6">
-          <NextShowCountdown compact />
+        <div className="mt-10">
+          <NextShowCountdown />
         </div>
       </section>
 
@@ -120,10 +126,10 @@ export default async function ListenLivePage({ params }: Props) {
             const [title, body] = c.ways[key];
             return (
               <li key={key} className="reveal card p-6">
-                <Icon size={28} className="text-saffron" />
+                <Icon size={28} className="text-accent" />
                 <h3 className="mt-3 text-lg font-extrabold">
                   {href ? (
-                    <a href={href} target="_blank" rel="noopener noreferrer" className="hover:text-saffron">
+                    <a href={href} target="_blank" rel="noopener noreferrer" className="hover:text-accent">
                       {title}
                     </a>
                   ) : (

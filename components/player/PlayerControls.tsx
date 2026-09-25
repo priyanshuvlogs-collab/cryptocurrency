@@ -22,7 +22,7 @@ export function PlayButton({ variant = "hero", className = "" }: { variant?: "he
         type="button"
         onClick={() => toggle()}
         aria-label={label}
-        className={`grid size-12 shrink-0 place-items-center rounded-full bg-saffron text-on-saffron ${className}`}
+        className={`grid size-12 shrink-0 place-items-center rounded-full bg-marigold text-ink ${className}`}
       >
         {busy ? <Spinner /> : isActive ? <PauseIcon size={22} /> : <PlayIcon size={22} />}
       </button>
@@ -106,7 +106,7 @@ export function OnAirBadge({ className = "" }: { className?: string }) {
   const { m } = useLocale();
   return (
     <span
-      className={`inline-flex items-center gap-2 rounded-full bg-live px-3 py-1 text-sm font-extrabold tracking-wider text-on-live uppercase ${className}`}
+      className={`meta inline-flex items-center gap-2 rounded-sm bg-live px-3 py-1.5 font-extrabold text-on-live ${className}`}
     >
       <span className="onair-dot bg-white!" aria-hidden="true" />
       {m.player.onAir}
@@ -135,13 +135,13 @@ export function NowPlaying({ timeZone, className = "" }: { timeZone?: string; cl
     <div className={className}>
       <p className="eyebrow">{m.player.nowPlaying}</p>
       {/* Fixed min-height so the client-side fill-in causes no layout shift. */}
-      <p className="mt-1 min-h-[2.6rem] font-display text-2xl leading-tight font-extrabold md:text-3xl">
+      <p className="mt-2 min-h-[2.4rem] font-display text-[2rem] leading-none font-extrabold uppercase md:text-[2.4rem]">
         {live ? title : <span className="text-muted">Indi Radio</span>}
       </p>
       <p className="min-h-[1.6em] text-muted">
         {live && host ? (
           <>
-            {m.player.withHost} <strong className="text-fg">{host}</strong>
+            <span className="serif text-lg">{m.player.withHost}</span> <strong className="text-fg">{host}</strong>
             {occ ? (
               <>
                 {" · "}
@@ -183,8 +183,9 @@ export function NextShowCountdown({ className = "", compact = false }: { classNa
   return (
     <div className={className}>
       <p className="eyebrow">{m.countdown.nextShow}</p>
-      <p className="mt-1 min-h-[1.75rem] text-lg font-bold">{next ? name : " "}</p>
-      <div className="mt-2 flex min-h-[3.25rem] items-center gap-2" aria-live="off">
+      <p className="mt-2 min-h-[1.9rem] font-display text-[1.7rem] leading-none font-extrabold uppercase">{next ? name : "\u00a0"}</p>
+      {/* Clock-style digits; screen readers get one sentence instead of ticking numbers. */}
+      <div className="mt-4 flex min-h-[4.5rem] items-start gap-1" aria-live="off">
         {parts ? (
           <>
             <span className="sr-only">
@@ -193,23 +194,24 @@ export function NextShowCountdown({ className = "", compact = false }: { classNa
             </span>
             {units
               .filter(([v], i) => !(i === 0 && v === 0))
-              .map(([v, unit]) => (
-                <span
-                  key={unit}
-                  aria-hidden="true"
-                  className={`grid ${compact ? "min-w-11" : "min-w-14"} place-items-center rounded-xl bg-surface-2 px-2 py-1.5 tabular-nums`}
-                >
-                  <span className={`${compact ? "text-xl" : "text-2xl"} leading-none font-extrabold`}>
-                    {String(v).padStart(2, "0")}
+              .map(([v, unit], i) => (
+                <span key={unit} aria-hidden="true" className="flex items-start gap-1">
+                  {i > 0 ? (
+                    <span className={`font-display ${compact ? "text-4xl" : "text-6xl"} leading-none font-black text-live`}>:</span>
+                  ) : null}
+                  <span className="grid justify-items-center">
+                    <span className={`font-display ${compact ? "text-4xl" : "text-6xl"} leading-none font-black tabular-nums`}>
+                      {String(v).padStart(2, "0")}
+                    </span>
+                    <span className="meta mt-1 text-muted">{unit}</span>
                   </span>
-                  <span className="text-xs text-muted">{unit}</span>
                 </span>
               ))}
           </>
         ) : null}
       </div>
       {next ? (
-        <p className="mt-2 text-sm text-muted">
+        <p className="mt-3 text-sm text-muted">
           <time dateTime={next.occurrence.start.toISOString()}>
             {new Intl.DateTimeFormat(locale === "pa" ? "pa-IN" : "en-CA", {
               timeZone: tz,
@@ -249,7 +251,7 @@ export function VolumeControl() {
         value={muted ? 0 : volume}
         onChange={(e) => setVolume(Number(e.target.value))}
         aria-label={m.player.volume}
-        className="w-24 accent-[var(--saffron)]"
+        className="w-24 accent-[var(--marigold)]"
       />
     </div>
   );

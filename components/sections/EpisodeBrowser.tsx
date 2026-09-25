@@ -71,7 +71,7 @@ export function EpisodeBrowser({ episodes, shows }: { episodes: Episode[]; shows
             <li key={ep.id} className="grid content-start gap-3">
               <VideoFacade id={ep.id} title={ep.title} thumbnail={ep.thumbnail} playLabel={m.episodes.watch} />
               <h2 className="line-clamp-2 font-bold">
-                <a href={ep.url} target="_blank" rel="noopener noreferrer" className="hover:text-saffron">
+                <a href={ep.url} target="_blank" rel="noopener noreferrer" className="hover:text-accent">
                   {ep.title}
                 </a>
               </h2>

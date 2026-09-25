@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
-import { Anybody, Inter_Tight, Mukta_Mahee, Noto_Sans_Gurmukhi } from "next/font/google";
+import { Baloo_Paaji_2, Big_Shoulders, Instrument_Serif, Noto_Sans_Gurmukhi, Schibsted_Grotesk } from "next/font/google";
 import "../globals.css";
 import { LocaleProvider } from "@/components/LocaleProvider";
 import { AudioProvider } from "@/components/player/AudioProvider";
@@ -19,23 +19,15 @@ import { graph, stationNode, websiteNode } from "@/lib/jsonld";
 import { SITE_NAME, SITE_URL, t, whatsappLink } from "@/lib/site";
 import { LOCALES } from "@/lib/types";
 
-const anybody = Anybody({ subsets: ["latin"], axes: ["wdth"], variable: "--font-anybody", display: "swap" });
-// Body font uses display "optional": if it isn't ready by first paint the
-// system fallback is kept for that view, so text never re-renders (better LCP/CLS).
-const inter = Inter_Tight({ subsets: ["latin"], variable: "--font-inter", display: "optional" });
-const muktaMahee = Mukta_Mahee({
-  weight: ["600", "800"],
-  subsets: ["gurmukhi"],
-  variable: "--font-gurmukhi-display",
-  display: "swap",
-  preload: false,
-});
-const notoGurmukhi = Noto_Sans_Gurmukhi({
-  subsets: ["gurmukhi"],
-  variable: "--font-gurmukhi-body",
-  display: "swap",
-  preload: false,
-});
+// Display: Big Shoulders – condensed, signage-like, reads like a radio poster.
+const display = Big_Shoulders({ weight: ["800", "900"], subsets: ["latin"], variable: "--font-display-latin", display: "swap" });
+// Body: Schibsted Grotesk – an editorial newspaper grotesk. "optional" = no re-render (LCP/CLS).
+const body = Schibsted_Grotesk({ subsets: ["latin"], variable: "--font-body-latin", display: "optional" });
+// Accent: Instrument Serif italic for small editorial flourishes.
+const serif = Instrument_Serif({ weight: "400", style: "italic", subsets: ["latin"], variable: "--font-serif", display: "swap", preload: false });
+// Gurmukhi: Baloo Paaji 2 (made for Punjabi) for headings, Noto Sans Gurmukhi for text.
+const gurmukhiDisplay = Baloo_Paaji_2({ weight: ["600", "800"], subsets: ["gurmukhi"], variable: "--font-gurmukhi-display", display: "swap", preload: false });
+const gurmukhiBody = Noto_Sans_Gurmukhi({ subsets: ["gurmukhi"], variable: "--font-gurmukhi-body", display: "swap", preload: false });
 
 export const dynamicParams = false;
 export function generateStaticParams() {
@@ -47,8 +39,8 @@ export const viewport: Viewport = {
   initialScale: 1,
   viewportFit: "cover",
   themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: "#12090f" },
-    { media: "(prefers-color-scheme: light)", color: "#fff8ef" },
+    { media: "(prefers-color-scheme: dark)", color: "#140b0e" },
+    { media: "(prefers-color-scheme: light)", color: "#f4ecdd" },
   ],
 };
 
@@ -94,7 +86,7 @@ export default async function LocaleLayout({
   return (
     <html
       lang={locale === "pa" ? "pa" : "en-CA"}
-      className={`${anybody.variable} ${inter.variable} ${muktaMahee.variable} ${notoGurmukhi.variable}`}
+      className={`${display.variable} ${body.variable} ${serif.variable} ${gurmukhiDisplay.variable} ${gurmukhiBody.variable}`}
       suppressHydrationWarning
     >
       <head>

@@ -23,7 +23,7 @@ export function SocialLinks({ settings, className = "" }: { settings: SiteSettin
             target="_blank"
             rel="noopener noreferrer me"
             aria-label={label}
-            className="grid size-11 place-items-center rounded-full border border-line hover:border-saffron hover:text-saffron"
+            className="grid size-11 place-items-center rounded-full border border-line hover:border-fg hover:text-accent"
           >
             <Icon size={20} />
           </a>
