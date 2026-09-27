@@ -75,6 +75,13 @@ const nextConfig: NextConfig = {
     ];
     return [
       ...old.map(([source, destination]) => ({ source, destination, permanent: true })),
+      // The Advertise page was split up: package links go straight to the pricing form.
+      {
+        source: "/:locale(en|pa)/advertise",
+        has: [{ type: "query" as const, key: "package" }],
+        destination: "/:locale/advertise/get-pricing",
+        permanent: true,
+      },
       { source: "/wp-admin/:path*", destination: "/en", permanent: false },
       { source: "/feed", destination: "/en/episodes", permanent: true },
     ];

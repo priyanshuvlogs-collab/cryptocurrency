@@ -1,14 +1,26 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { WhatsAppIcon } from "@/components/ui/Icons";
 
 /**
- * Mobile-only bar with "Get pricing" and "WhatsApp", sitting just above the
- * live mini-player (safe-area aware). Hidden while the inquiry form is on
- * screen. Adds page padding so it never covers the footer.
+ * Mobile-only bar with "Get pricing" and "WhatsApp", shown on every
+ * Advertise page just above the live mini-player (safe-area aware). Hidden
+ * while the inquiry form is on screen. Adds page padding so it never covers
+ * the footer.
  */
-export function StickyCtaBar({ pricingLabel, whatsappLabel, whatsappHref }: { pricingLabel: string; whatsappLabel: string; whatsappHref: string }) {
+export function StickyCtaBar({
+  pricingLabel,
+  pricingHref,
+  whatsappLabel,
+  whatsappHref,
+}: {
+  pricingLabel: string;
+  pricingHref: string;
+  whatsappLabel: string;
+  whatsappHref: string;
+}) {
   const [formVisible, setFormVisible] = useState(false);
 
   useEffect(() => {
@@ -33,9 +45,9 @@ export function StickyCtaBar({ pricingLabel, whatsappLabel, whatsappHref }: { pr
       aria-hidden={formVisible || undefined}
     >
       <div className="grid grid-cols-2 gap-2">
-        <a href="#inquiry" tabIndex={formVisible ? -1 : undefined} className="btn btn-primary min-h-12!">
+        <Link href={pricingHref} tabIndex={formVisible ? -1 : undefined} className="btn btn-primary min-h-12!">
           {pricingLabel}
-        </a>
+        </Link>
         <a
           href={whatsappHref}
           target="_blank"

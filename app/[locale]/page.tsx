@@ -1,12 +1,12 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { LiveHero } from "@/components/sections/Hero";
-import { EpisodeGrid, JoinSection, SocialStrip, SponsorStrip, TierCards } from "@/components/sections/Shared";
+import { EpisodeGrid, JoinSection, SocialStrip, SponsorStrip } from "@/components/sections/Shared";
 import { NextShowCountdown } from "@/components/player/PlayerControls";
 import { WorldClocks } from "@/components/player/WorldClocks";
 import { Section } from "@/components/ui/Page";
 import { ArrowRightIcon } from "@/components/ui/Icons";
-import { getDedicationTiers, getSettings, getShows, getSocialPosts, getSponsors } from "@/lib/cms";
+import { getSettings, getShows, getSocialPosts, getSponsors } from "@/lib/cms";
 import { getMessages } from "@/lib/i18n";
 import { pageMetadata } from "@/lib/seo";
 import { getAllEpisodes } from "@/lib/episodes";
@@ -29,9 +29,18 @@ const COPY = {
     tzBody: "Every show time converts automatically to Vancouver, India, UK or Australia time, or wherever you are.",
     clipsEyebrow: "Replay",
     clipsTitle: "Latest clips & episodes",
-    dedEyebrow: "Dedications & shout-outs",
-    dedTitle: "Make someone’s day, live on air",
-    dedIntro: "Birthdays, anniversaries, weddings, festivals and grand openings: let Indi Jaswal share your message with Punjabi families around the world.",
+    exploreEyebrow: "Explore",
+    exploreTitle: "Everything on Indi Radio",
+    explore: [
+      ["/schedule", "Weekly schedule", "Every show, in your own time zone."],
+      ["/shows", "Our shows", "Bhedan Da Kaal, Punjabi music and more."],
+      ["/call-in", "Call in live", "How to get on air during the live shows."],
+      ["/dedications", "Dedications", "Birthday, anniversary and festival shout-outs."],
+      ["/song-request", "Request a song", "Ask for your favourite Punjabi song."],
+      ["/events", "Events", "Community events and live broadcasts."],
+      ["/advertise", "Advertise with us", "Reach Punjabi families in Surrey and beyond."],
+      ["/indi-jaswal", "Meet Indi Jaswal", "The founder and voice of Indi Radio."],
+    ] as [string, string, string][],
     factsEyebrow: "At a glance",
     factsTitle: "Indi Radio in 30 seconds",
     facts: [
@@ -49,9 +58,18 @@ const COPY = {
     tzBody: "ਹਰ ਸ਼ੋਅ ਦਾ ਸਮਾਂ ਆਪਣੇ-ਆਪ ਵੈਨਕੂਵਰ, ਭਾਰਤ, ਯੂ.ਕੇ. ਜਾਂ ਆਸਟ੍ਰੇਲੀਆ ਦੇ ਸਮੇਂ ਵਿੱਚ ਬਦਲ ਜਾਂਦਾ ਹੈ, ਜਾਂ ਜਿੱਥੇ ਵੀ ਤੁਸੀਂ ਹੋ।",
     clipsEyebrow: "ਦੁਬਾਰਾ ਸੁਣੋ",
     clipsTitle: "ਨਵੇਂ ਕਲਿੱਪ ਅਤੇ ਐਪੀਸੋਡ",
-    dedEyebrow: "ਸੁਨੇਹੇ ਅਤੇ ਸ਼ਾਊਟ-ਆਊਟ",
-    dedTitle: "ਕਿਸੇ ਦਾ ਦਿਨ ਖ਼ਾਸ ਬਣਾਓ, ਲਾਈਵ ਆਨ-ਏਅਰ",
-    dedIntro: "ਜਨਮਦਿਨ, ਵਰ੍ਹੇਗੰਢ, ਵਿਆਹ, ਤਿਉਹਾਰ ਅਤੇ ਨਵੇਂ ਕਾਰੋਬਾਰ ਦੀ ਸ਼ੁਰੂਆਤ: ਇੰਡੀ ਜਸਵਾਲ ਤੁਹਾਡਾ ਸੁਨੇਹਾ ਦੁਨੀਆ ਭਰ ਦੇ ਪੰਜਾਬੀ ਪਰਿਵਾਰਾਂ ਤੱਕ ਪਹੁੰਚਾਉਣਗੇ।",
+    exploreEyebrow: "ਹੋਰ ਦੇਖੋ",
+    exploreTitle: "ਇੰਡੀ ਰੇਡੀਓ ’ਤੇ ਸਭ ਕੁਝ",
+    explore: [
+      ["/schedule", "ਹਫ਼ਤੇ ਦੀ ਸਮਾਂ-ਸੂਚੀ", "ਹਰ ਸ਼ੋਅ, ਤੁਹਾਡੇ ਆਪਣੇ ਸਮੇਂ ਵਿੱਚ।"],
+      ["/shows", "ਸਾਡੇ ਸ਼ੋਅ", "‘ਭੇਡਾਂ ਦਾ ਕਾਲ’, ਪੰਜਾਬੀ ਸੰਗੀਤ ਅਤੇ ਹੋਰ ਬਹੁਤ ਕੁਝ।"],
+      ["/call-in", "ਲਾਈਵ ਕਾਲ ਕਰੋ", "ਲਾਈਵ ਸ਼ੋਅ ਦੌਰਾਨ ਆਨ-ਏਅਰ ਕਿਵੇਂ ਆਈਏ।"],
+      ["/dedications", "ਸੁਨੇਹੇ ਤੇ ਸ਼ਾਊਟ-ਆਊਟ", "ਜਨਮਦਿਨ, ਵਰ੍ਹੇਗੰਢ ਅਤੇ ਤਿਉਹਾਰਾਂ ਦੇ ਸੁਨੇਹੇ।"],
+      ["/song-request", "ਗੀਤ ਦੀ ਫ਼ਰਮਾਇਸ਼", "ਆਪਣਾ ਮਨਪਸੰਦ ਪੰਜਾਬੀ ਗੀਤ ਮੰਗਵਾਓ।"],
+      ["/events", "ਸਮਾਗਮ", "ਭਾਈਚਾਰੇ ਦੇ ਸਮਾਗਮ ਅਤੇ ਲਾਈਵ ਪ੍ਰਸਾਰਣ।"],
+      ["/advertise", "ਸਾਡੇ ਨਾਲ ਮਸ਼ਹੂਰੀ ਕਰੋ", "ਸਰੀ ਅਤੇ ਹੋਰ ਥਾਵਾਂ ਦੇ ਪੰਜਾਬੀ ਪਰਿਵਾਰਾਂ ਤੱਕ ਪਹੁੰਚੋ।"],
+      ["/indi-jaswal", "ਇੰਡੀ ਜਸਵਾਲ ਨੂੰ ਮਿਲੋ", "ਇੰਡੀ ਰੇਡੀਓ ਦੇ ਬਾਨੀ ਅਤੇ ਆਵਾਜ਼।"],
+    ] as [string, string, string][],
     factsEyebrow: "ਇੱਕ ਨਜ਼ਰ ਵਿੱਚ",
     factsTitle: "30 ਸਕਿੰਟਾਂ ਵਿੱਚ ਇੰਡੀ ਰੇਡੀਓ",
     facts: [
@@ -68,10 +86,9 @@ export default async function HomePage({ params }: Props) {
   const { locale } = await params;
   const m = getMessages(locale);
   const c = COPY[locale];
-  const [settings, shows, tiers, sponsors, posts] = await Promise.all([
+  const [settings, shows, sponsors, posts] = await Promise.all([
     getSettings(),
     getShows(),
-    getDedicationTiers(),
     getSponsors(),
     getSocialPosts(),
   ]);
@@ -119,8 +136,22 @@ export default async function HomePage({ params }: Props) {
         <EpisodeGrid episodes={episodes.slice(0, 6)} locale={locale} m={m} />
       </Section>
 
-      <Section id="dedications" eyebrow={c.dedEyebrow} title={c.dedTitle} intro={c.dedIntro}>
-        <TierCards tiers={tiers} locale={locale} m={m} />
+      <Section id="explore" eyebrow={c.exploreEyebrow} title={c.exploreTitle}>
+        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {c.explore.map(([path, title, body]) => (
+            <li key={path}>
+              <Link
+                href={`/${locale}${path}`}
+                className="reveal group flex h-full flex-col rounded-md border-2 border-fg bg-surface p-5 transition hover:-translate-y-0.5 hover:shadow-[6px_6px_0_var(--fg)]"
+              >
+                <span className="flex items-start justify-between gap-3 font-display text-2xl leading-none font-extrabold uppercase group-hover:text-accent">
+                  {title} <ArrowRightIcon size={20} className="shrink-0" />
+                </span>
+                <span className="mt-3 text-muted">{body}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
       </Section>
 
       <SponsorStrip sponsors={sponsors} locale={locale} m={m} />

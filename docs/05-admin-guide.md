@@ -56,7 +56,9 @@ Paid bookings arrive by **email** and in **GoHighLevel** (tagged `form:dedicatio
 
 ## 💼 Advertising
 
-**Golden rule:** the Advertise page never shows made-up numbers. Any field left empty, or still containing `[CONFIRM`, is hidden, along with its whole section if nothing in it is filled in. Fill a field in and it appears within about 5 minutes.
+The Advertise section has its own pages: **Overview** (`/advertise`), **Audience** (`/advertise/audience`), **Packages** (`/advertise/packages`), **Advertisers** (`/advertise/success`, which appears only once you add a real sponsor or testimonial) and **Get pricing** (`/advertise/get-pricing`, the inquiry form and FAQ).
+
+**Golden rule:** the Advertise pages never show made-up numbers. Any field left empty, or still containing `[CONFIRM`, is hidden, along with its whole section if nothing in it is filled in. Fill a field in and it appears within about 5 minutes.
 
 **📢 Advertise page** (sidebar):
 
@@ -73,7 +75,7 @@ Paid bookings arrive by **email** and in **GoHighLevel** (tagged `form:dedicatio
 | FAQ & contact | We reply within… | “We reply within …” next to the form and in the thank-you message |
 
 **💼 Advertising packages** (one document per package):
-- **Package code:** used in links like `?package=live-host-read`. Don’t change it once the page is live.
+- **Package code:** used in links like `/advertise/get-pricing?package=live-host-read`. Don’t change it once the page is live.
 - **Shown as:** *Package card* (the three cards) or *Station Partner strip*. The strip only appears when **Show on the website** is ON.
 - **Starting price (CAD per month):** empty → “Pricing on request”.
 - **Badge** (e.g. “Most popular”), **Spots per week**, **Spot length**, **Languages**, **Minimum term**, **Ad production included**, **Monthly play report**: each row appears only when filled in.
@@ -83,7 +85,7 @@ Paid bookings arrive by **email** and in **GoHighLevel** (tagged `form:dedicatio
 
 Inquiries from the Advertise page arrive by email and in GoHighLevel (`form:sponsor`), with the package, budget, preferred contact and language.
 
-**Build check:** `npm run build` fails if `[CONFIRM` appears on /en/advertise or /pa/advertise, or on any page not listed in `scripts/confirm-baseline.json`. When you finish confirming a page, remove it from that list.
+**Build check:** `npm run build` fails if `[CONFIRM` appears on any /advertise page (EN or PA), or on any page not listed in `scripts/confirm-baseline.json`. When you finish confirming a page, remove it from that list.
 
 ## ❓ FAQ
 **FAQ** → **+** → question + answer in both languages. Aim for **40–60 words**: that length is what Google and AI assistants quote. Choose a category and a sort order.

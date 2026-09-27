@@ -1,5 +1,5 @@
 {
-  "_note": "Pages that still show [CONFIRM] while the station confirms facts. Remove a page once it is clean; /en/advertise and /pa/advertise are always strict and can never be listed.",
+  "_note": "Pages that still show [CONFIRM] while the station confirms facts. Remove a page once it is clean. Every /en/advertise and /pa/advertise page is always strict and can never be listed.",
   "pages": [
     "/en",
     "/en/about",

@@ -5,8 +5,9 @@
  * Scans every prerendered page in .next/server/app (HTML plus the inline RSC
  * payload) in both languages.
  *
- * - STRICT pages (the Advertise pages) must exist in the build and must never
- *   contain "[CONFIRM".
+ * - STRICT pages (every /advertise page, in both languages) must never contain
+ *   "[CONFIRM", and the REQUIRED ones must exist in the build. (The
+ *   Advertisers page is optional: it only exists once there is real content.)
  * - Any other page may only contain it while it is listed in
  *   scripts/confirm-baseline.json – the list of pages still waiting on facts
  *   from the station. A page NOT on that list that renders "[CONFIRM" fails
@@ -21,7 +22,8 @@ import { join, relative, sep } from "node:path";
 const ROOT = new URL("..", import.meta.url).pathname;
 const APP_DIR = join(ROOT, ".next", "server", "app");
 const MARKER = "[CONFIRM";
-const STRICT = ["/en/advertise", "/pa/advertise"];
+const REQUIRED = ["", "/audience", "/packages", "/get-pricing"].flatMap((p) => [`/en/advertise${p}`, `/pa/advertise${p}`]);
+const isStrict = (route) => /^\/(en|pa)\/advertise(\/|$)/.test(route);
 const baselinePath = join(ROOT, "scripts", "confirm-baseline.json");
 const baseline = new Set(existsSync(baselinePath) ? JSON.parse(readFileSync(baselinePath, "utf8")).pages : []);
 
@@ -55,11 +57,11 @@ for (const file of walk(APP_DIR)) {
 }
 
 const errors = [];
-for (const route of STRICT) {
+for (const route of REQUIRED) {
   if (!seen.has(route)) errors.push(`${route}: not prerendered, so it could not be checked`);
 }
 for (const [route, samples] of offenders) {
-  if (STRICT.includes(route) || !baseline.has(route)) {
+  if (isStrict(route) || !baseline.has(route)) {
     errors.push(`${route}: contains "${MARKER}"\n      …${samples.join("…\n      …")}…`);
   }
 }

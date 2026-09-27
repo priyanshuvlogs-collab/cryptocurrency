@@ -5,7 +5,7 @@ import { BRAND_DESCRIPTION, isFilled, t, whatsappLink } from "@/lib/site";
 import { AppBadges } from "@/components/ui/AppBadges";
 import { SocialLinks } from "@/components/ui/SocialLinks";
 import { PhoneIcon } from "@/components/ui/Icons";
-import type { NavKey } from "./nav";
+import { NAV_GROUPS, type NavKey } from "./nav";
 
 const SIGNOFF = {
   en: ["Tune in.", "Call in.", "Stay close to home."],
@@ -20,7 +20,7 @@ export function SiteFooter({ locale, m, settings }: { locale: Locale; m: Message
     isFilled(settings.resoundLicence) ? `${m.footer.resoundLicence} ${settings.resoundLicence}` : null,
   ].filter(Boolean);
   const col = (title: string, items: [NavKey, string][]) => (
-    <div>
+    <div key={title}>
       <h2 className="meta text-marigold">{title}</h2>
       <ul className="mt-4 space-y-1">
         {items.map(([key, path]) => (
@@ -54,7 +54,7 @@ export function SiteFooter({ locale, m, settings }: { locale: Locale; m: Message
         </div>
       </div>
 
-      <div className="container-ir grid gap-10 py-12 md:grid-cols-[1.5fr_1fr_1fr_1fr]">
+      <div className="container-ir grid gap-10 py-12 sm:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1fr_1fr]">
         <div className="space-y-5">
           {/* Key facts in plain HTML for search engines and AI answer engines. */}
           <p className="max-w-md text-muted">{t(BRAND_DESCRIPTION, locale)}</p>
@@ -77,25 +77,12 @@ export function SiteFooter({ locale, m, settings }: { locale: Locale; m: Message
           </address>
           <SocialLinks settings={settings} />
         </div>
-        {col(m.footer.listen, [
-          ["listenLive", "/listen-live"],
-          ["schedule", "/schedule"],
-          ["shows", "/shows"],
-          ["episodes", "/episodes"],
-          ["events", "/events"],
-        ])}
-        {col(m.footer.getInvolved, [
-          ["callIn", "/call-in"],
-          ["dedications", "/dedications"],
-          ["songRequest", "/song-request"],
-          ["advertise", "/advertise"],
-        ])}
-        {col(m.footer.station, [
-          ["about", "/about"],
-          ["indi", "/indi-jaswal"],
-          ["faq", "/faq"],
-          ["contact", "/contact"],
-        ])}
+        {NAV_GROUPS.map((group) =>
+          col(
+            m.nav[group.key],
+            group.items.map((item) => [item.key, item.path]),
+          ),
+        )}
       </div>
 
       {/* Oversized wordmark sign-off */}

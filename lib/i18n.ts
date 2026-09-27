@@ -134,6 +134,56 @@ export const PAGES = {
         "ਸਰੀ, ਪੂਰੇ ਕੈਨੇਡਾ ਅਤੇ ਦੁਨੀਆ ਭਰ ਦੇ ਪੰਜਾਬੀ ਪਰਿਵਾਰਾਂ ਤੱਕ ਪਹੁੰਚੋ। ਇੰਡੀ ਰੇਡੀਓ ’ਤੇ ਇਸ਼ਤਿਹਾਰ, ਸ਼ੋਅ ਸਪਾਂਸਰਸ਼ਿਪ ਅਤੇ ਭਾਈਵਾਲੀ। ਮੀਡੀਆ ਕਿੱਟ ਲਓ।",
     },
   },
+  advertiseAudience: {
+    path: "/advertise/audience",
+    en: {
+      title: "Indi Radio Audience & Sample Ads | Advertise",
+      description:
+        "Who listens to Indi Radio: Punjabi-speaking families in Surrey, the Lower Mainland and worldwide. See audience figures and hear sample host-read ads.",
+    },
+    pa: {
+      title: "ਇੰਡੀ ਰੇਡੀਓ ਦੇ ਸਰੋਤੇ ਅਤੇ ਨਮੂਨੇ ਦੀਆਂ ਮਸ਼ਹੂਰੀਆਂ | ਮਸ਼ਹੂਰੀ",
+      description:
+        "ਇੰਡੀ ਰੇਡੀਓ ਕੌਣ ਸੁਣਦਾ ਹੈ: ਸਰੀ, ਲੋਅਰ ਮੇਨਲੈਂਡ ਅਤੇ ਦੁਨੀਆ ਭਰ ਦੇ ਪੰਜਾਬੀ ਪਰਿਵਾਰ। ਸਰੋਤਿਆਂ ਦੇ ਅੰਕੜੇ ਦੇਖੋ ਅਤੇ ਹੋਸਟ ਵੱਲੋਂ ਪੜ੍ਹੀਆਂ ਮਸ਼ਹੂਰੀਆਂ ਸੁਣੋ।",
+    },
+  },
+  advertisePackages: {
+    path: "/advertise/packages",
+    en: {
+      title: "Radio Advertising Packages | Indi Radio Surrey",
+      description:
+        "On-air spots, live host-read ads and Bhedan Da Kaal show sponsorship on Indi Radio. Compare packages and get a quote for your business.",
+    },
+    pa: {
+      title: "ਰੇਡੀਓ ਮਸ਼ਹੂਰੀ ਦੇ ਪੈਕੇਜ | ਇੰਡੀ ਰੇਡੀਓ ਸਰੀ",
+      description:
+        "ਇੰਡੀ ਰੇਡੀਓ ’ਤੇ ਆਨ-ਏਅਰ ਇਸ਼ਤਿਹਾਰ, ਹੋਸਟ ਵੱਲੋਂ ਲਾਈਵ ਪੜ੍ਹੀ ਮਸ਼ਹੂਰੀ ਅਤੇ ‘ਭੇਡਾਂ ਦਾ ਕਾਲ’ ਦੀ ਸਪਾਂਸਰਸ਼ਿਪ। ਪੈਕੇਜ ਦੇਖੋ ਅਤੇ ਆਪਣੇ ਕਾਰੋਬਾਰ ਲਈ ਕੀਮਤ ਪੁੱਛੋ।",
+    },
+  },
+  advertiseSuccess: {
+    path: "/advertise/success",
+    en: {
+      title: "Our Advertisers & What They Say | Indi Radio",
+      description: "Businesses that advertise on Indi Radio, Surrey’s Punjabi radio station, and what they say about it.",
+    },
+    pa: {
+      title: "ਸਾਡੇ ਨਾਲ ਮਸ਼ਹੂਰੀ ਕਰਨ ਵਾਲੇ | ਇੰਡੀ ਰੇਡੀਓ",
+      description: "ਸਰੀ ਦੇ ਪੰਜਾਬੀ ਰੇਡੀਓ, ਇੰਡੀ ਰੇਡੀਓ ’ਤੇ ਮਸ਼ਹੂਰੀ ਕਰਨ ਵਾਲੇ ਕਾਰੋਬਾਰ, ਅਤੇ ਉਹ ਕੀ ਕਹਿੰਦੇ ਹਨ।",
+    },
+  },
+  advertiseGetPricing: {
+    path: "/advertise/get-pricing",
+    en: {
+      title: "Get Advertising Pricing | Indi Radio Surrey",
+      description:
+        "Ask for Indi Radio advertising prices. Tell us about your business and we’ll reply on WhatsApp, by phone or email. Answers to common advertiser questions.",
+    },
+    pa: {
+      title: "ਮਸ਼ਹੂਰੀ ਦੀ ਕੀਮਤ ਪੁੱਛੋ | ਇੰਡੀ ਰੇਡੀਓ ਸਰੀ",
+      description:
+        "ਇੰਡੀ ਰੇਡੀਓ ’ਤੇ ਮਸ਼ਹੂਰੀ ਦੀ ਕੀਮਤ ਪੁੱਛੋ। ਆਪਣੇ ਕਾਰੋਬਾਰ ਬਾਰੇ ਦੱਸੋ, ਅਸੀਂ WhatsApp, ਫ਼ੋਨ ਜਾਂ ਈਮੇਲ ਰਾਹੀਂ ਜਵਾਬ ਦੇਵਾਂਗੇ। ਮਸ਼ਹੂਰੀ ਬਾਰੇ ਆਮ ਸਵਾਲਾਂ ਦੇ ਜਵਾਬ।",
+    },
+  },
   events: {
     path: "/events",
     en: {
