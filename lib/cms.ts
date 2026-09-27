@@ -5,6 +5,7 @@ import * as seed from "@/content/seed";
 import { DEFAULT_SETTINGS } from "./site";
 import type {
   AdPackage,
+  AdvertiseContent,
   Announcement,
   CommunityEvent,
   DedicationTier,
@@ -83,6 +84,7 @@ export const getSettings = cache(async (): Promise<SiteSettings> => {
       streamUrl, phoneDisplay, phoneE164, whatsappNumber, whatsappChannelUrl, email,
       address, appStoreUrl, playStoreUrl, tuneInUrl, socials, youtubeChannelId,
       tiktokLiveNow, tiktokLiveUrl, "mediaKitUrl": mediaKit.asset->url, ${img("hostImage")},
+      socanLicence, resoundLicence,
       audienceStats[]{label, value}
     }`,
     null,
@@ -174,13 +176,54 @@ export const getDedicationTiers = cache(async (): Promise<DedicationTier[]> => {
   return raw.length ? raw : seed.dedicationTiers;
 });
 
+type RawAdPackage = Omit<AdPackage, "enabled" | "kind"> & { enabled: boolean | null; kind: AdPackage["kind"] | null };
+
 export const getAdPackages = cache(async (): Promise<AdPackage[]> => {
   if (!client) return seed.adPackages;
-  const raw = await query<AdPackage[]>(
-    `*[_type == "adPackage"] | order(order asc){ "id": _id, name, description, priceNote, "features": coalesce(features, []) }`,
+  const raw = await query<RawAdPackage[]>(
+    `*[_type == "adPackage"] | order(order asc){
+      "id": _id, "slug": coalesce(code.current, _id), kind, enabled, name, description, badge, priceMonthly,
+      spotsPerWeek, length, languages, minimumTerm, productionIncluded, monthlyPlayReport,
+      "features": coalesce(features, []), "showSlug": show->slug.current
+    }`,
     [],
   );
-  return raw.length ? raw : seed.adPackages;
+  if (!raw.length) return seed.adPackages;
+  return raw.map((p) => ({
+    ...p,
+    kind: p.kind === "partner" ? "partner" : "card",
+    // Cards show unless switched off; the partner strip only when switched on.
+    enabled: p.kind === "partner" ? p.enabled === true : p.enabled !== false,
+  }));
+});
+
+/** The "Advertise page" singleton. Missing fields fall back to empty (hidden). */
+export const getAdvertiseContent = cache(async (): Promise<AdvertiseContent> => {
+  const fallback = seed.advertiseContent;
+  const raw = await query<Partial<AdvertiseContent> | null>(
+    `*[_type == "advertisePage"][0]{
+      ${img("heroImage")}, "heroImageAlt": heroImage.alt, stats, statsAsOf,
+      "sampleAds": sampleAds[defined(audio.asset)]{ "id": _key, title, transcript, language, "audioUrl": audio.asset->url },
+      idealFor, foundingBanner,
+      "testimonials": testimonials[]{ "id": _key, quote, name, business },
+      "faq": faq[]{ "id": _key, q, a },
+      replyTime
+    }`,
+    null,
+  );
+  if (!raw) return fallback;
+  return {
+    heroImage: raw.heroImage ?? null,
+    heroImageAlt: raw.heroImageAlt ?? null,
+    stats: { ...fallback.stats, ...(raw.stats || {}) },
+    statsAsOf: raw.statsAsOf ?? null,
+    sampleAds: (raw.sampleAds || []).slice(0, 3),
+    idealFor: raw.idealFor?.length ? raw.idealFor : fallback.idealFor,
+    foundingBanner: { ...fallback.foundingBanner, ...(raw.foundingBanner || {}) },
+    testimonials: (raw.testimonials || []).slice(0, 2),
+    faq: raw.faq?.length ? raw.faq : fallback.faq,
+    replyTime: raw.replyTime ?? null,
+  };
 });
 
 export const getPress = cache(async (): Promise<PressItem[]> =>

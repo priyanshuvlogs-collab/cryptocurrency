@@ -21,6 +21,8 @@ export function SmartForm({
   submitLabel,
   className = "",
   hideOnSuccess = true,
+  eventParams,
+  id,
 }: {
   action: Action;
   event: string;
@@ -28,18 +30,24 @@ export function SmartForm({
   submitLabel?: string;
   className?: string;
   hideOnSuccess?: boolean;
+  /** Extra GA4 parameters taken from the submitted values (e.g. package, budget). */
+  eventParams?: (fd: FormData) => Record<string, string>;
+  id?: string;
 }) {
   const { locale, m } = useLocale();
   const [state, formAction, pending] = useActionState(action, { status: "idle" } as FormState);
   const tRef = useRef<HTMLInputElement>(null);
   const statusRef = useRef<HTMLDivElement>(null);
+  const paramsRef = useRef<Record<string, string>>({});
 
+  const startedRef = useRef("");
   useEffect(() => {
-    if (tRef.current) tRef.current.value = String(Date.now());
+    startedRef.current = String(Date.now());
+    if (tRef.current) tRef.current.value = startedRef.current;
   }, []);
 
   useEffect(() => {
-    if (state.status === "success") trackEvent(event);
+    if (state.status === "success") trackEvent(event, paramsRef.current);
     if (state.status !== "idle") statusRef.current?.focus();
   }, [state, event]);
 
@@ -64,12 +72,17 @@ export function SmartForm({
   return (
     <ErrorsContext.Provider value={state.fieldErrors || {}}>
       <form
+        id={id}
         className={`grid gap-5 ${className}`}
         onSubmit={(e) => {
           // Dispatch manually (instead of action={...}) so fields keep their
           // values when the server returns validation errors.
           e.preventDefault();
           const fd = new FormData(e.currentTarget);
+          // Set the time-trap stamp from the ref: the hidden input's DOM value
+          // can be lost when a re-render happens right after mount.
+          if (startedRef.current) fd.set("_t", startedRef.current);
+          if (eventParams) paramsRef.current = eventParams(fd);
           startTransition(() => formAction(fd));
         }}
       >

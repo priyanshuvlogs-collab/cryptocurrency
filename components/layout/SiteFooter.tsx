@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { Messages } from "@/messages/en";
 import type { Locale, SiteSettings } from "@/lib/types";
-import { BRAND_DESCRIPTION, t, whatsappLink } from "@/lib/site";
+import { BRAND_DESCRIPTION, isFilled, t, whatsappLink } from "@/lib/site";
 import { AppBadges } from "@/components/ui/AppBadges";
 import { SocialLinks } from "@/components/ui/SocialLinks";
 import { PhoneIcon } from "@/components/ui/Icons";
@@ -14,6 +14,11 @@ const SIGNOFF = {
 
 export function SiteFooter({ locale, m, settings }: { locale: Locale; m: Messages; settings: SiteSettings }) {
   const href = (p: string) => `/${locale}${p}`;
+  // Licence numbers render only once they're entered in the CMS.
+  const licences = [
+    isFilled(settings.socanLicence) ? `${m.footer.socanLicence} ${settings.socanLicence}` : null,
+    isFilled(settings.resoundLicence) ? `${m.footer.resoundLicence} ${settings.resoundLicence}` : null,
+  ].filter(Boolean);
   const col = (title: string, items: [NavKey, string][]) => (
     <div>
       <h2 className="meta text-marigold">{title}</h2>
@@ -111,7 +116,11 @@ export function SiteFooter({ locale, m, settings }: { locale: Locale; m: Message
             {m.nav.terms}
           </Link>
         </p>
-        <p className="max-w-xl md:text-right">{m.footer.licensing}</p>
+        {licences.length ? (
+          <p className="max-w-xl md:text-right">
+            {m.footer.licensedBy} {licences.join(" · ")}
+          </p>
+        ) : null}
       </div>
     </footer>
   );

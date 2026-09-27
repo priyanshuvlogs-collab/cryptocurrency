@@ -10,10 +10,9 @@ export function SocialLinks({ settings, className = "" }: { settings: SiteSettin
     { url: settings.whatsappChannelUrl, label: "Indi Radio WhatsApp channel", Icon: WhatsAppIcon },
   ].filter((l): l is { url: string; label: string; Icon: typeof TikTokIcon } => Boolean(l.url));
 
-  if (!links.length) {
-    // [CONFIRM] social profile URLs in the CMS (Site settings → Social profiles)
-    return <p className={`text-sm text-muted ${className}`}>TikTok · YouTube · Facebook · Instagram [CONFIRM links]</p>;
-  }
+  // Nothing is rendered until the station adds profile URLs in the CMS
+  // (Site settings → Apps & social → Social profiles).
+  if (!links.length) return null;
   return (
     <ul className={`flex flex-wrap gap-2 ${className}`}>
       {links.map(({ url, label, Icon }) => (

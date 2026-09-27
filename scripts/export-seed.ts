@@ -78,11 +78,37 @@ seed.adPackages.forEach((p, i) =>
     _id: `adpackage-${p.id}`,
     _type: "adPackage",
     name: text(p.name),
+    code: { _type: "slug", current: p.slug },
+    kind: p.kind,
+    enabled: p.enabled,
     description: text(p.description),
-    priceNote: text(p.priceNote),
+    ...(p.badge ? { badge: text(p.badge) } : {}),
+    ...(p.priceMonthly != null ? { priceMonthly: p.priceMonthly } : {}),
+    ...(p.spotsPerWeek ? { spotsPerWeek: p.spotsPerWeek } : {}),
+    ...(p.length ? { length: text(p.length) } : {}),
+    ...(p.languages ? { languages: text(p.languages) } : {}),
+    ...(p.minimumTerm ? { minimumTerm: text(p.minimumTerm) } : {}),
+    ...(p.productionIncluded != null ? { productionIncluded: p.productionIncluded } : {}),
+    ...(p.monthlyPlayReport != null ? { monthlyPlayReport: p.monthlyPlayReport } : {}),
+    ...(p.showSlug ? { show: { _type: "reference", _ref: `show-${p.showSlug}` } } : {}),
     features: p.features.map((f, j) => ({ _key: key(j), ...text(f) })),
     order: i,
   }),
 );
+
+// "Advertise page" singleton – only the text the station has already written;
+// numbers, samples and testimonials stay empty until the owner fills them in.
+const ad = seed.advertiseContent;
+docs.push({
+  _id: "advertisePage",
+  _type: "advertisePage",
+  idealFor: ad.idealFor.map((c, i) => ({ _key: key(i), ...text(c) })),
+  foundingBanner: { enabled: false },
+  faq: ad.faq.map((f) => ({
+    _key: f.id,
+    q: text(f.q),
+    ...(f.a ? { a: { _type: "localeText", ...f.a } } : {}),
+  })),
+});
 
 process.stdout.write(docs.map((d) => JSON.stringify(d)).join("\n") + "\n");

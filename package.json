@@ -6,10 +6,12 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "postbuild": "node scripts/check-confirm.mjs",
     "start": "next start",
     "typecheck": "tsc --noEmit",
     "test": "node --test --experimental-strip-types tests/*.test.ts",
-    "confirm-report": "grep -rn --include=*.ts --include=*.tsx --include=*.md \"\\[CONFIRM\" app components lib content messages studio docs | grep -v node_modules"
+    "confirm-report": "grep -rn --include=*.ts --include=*.tsx --include=*.md \"\\[CONFIRM\" app components lib content messages studio docs | grep -v node_modules",
+    "check:confirm": "node scripts/check-confirm.mjs"
   },
   "engines": {
     "node": ">=20.9"

@@ -57,13 +57,17 @@ export const siteSettings = defineType({
       group: "links",
       fields: ["tiktok", "youtube", "facebook", "instagram"].map((name) => defineField({ name, type: "url" })),
     }),
+    defineField({ name: "socanLicence", title: "SOCAN licence number", type: "string", group: "links", description: "Shown in the footer only when filled in." }),
+    defineField({ name: "resoundLicence", title: "Re:Sound licence number", type: "string", group: "links", description: "Shown in the footer only when filled in." }),
     defineField({ name: "youtubeChannelId", title: "YouTube channel ID", type: "string", group: "links", description: "Starts with UC… (YouTube Studio → Settings → Channel → Advanced)." }),
     defineField({ name: "hostImage", title: "Photo of Indi Jaswal", type: "image", group: "media", options: { hotspot: true }, fields: [defineField({ name: "alt", type: "string", title: "Description (alt text)" })] }),
     defineField({ name: "mediaKit", title: "Media kit (PDF)", type: "file", group: "media", options: { accept: "application/pdf" } }),
     defineField({
       name: "audienceStats",
-      title: "Audience stats (Advertise page)",
+      title: "Audience stats (old)",
       type: "array",
+      // Replaced by the "Advertise page" document → Audience stats.
+      hidden: true,
       group: "media",
       of: [
         defineArrayMember({

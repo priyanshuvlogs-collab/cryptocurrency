@@ -35,7 +35,14 @@ const SUBJECTS: Record<Lead["type"], string> = {
   dedication_paid: "PAID dedication booking",
 };
 
-export async function sendEmail(opts: { to: string[]; subject: string; html: string; replyTo?: string }): Promise<boolean> {
+export async function sendEmail(opts: {
+  to: string[];
+  subject: string;
+  html: string;
+  replyTo?: string;
+  /** Resend fetches `path` (a public URL) and attaches it. */
+  attachments?: { filename: string; path: string }[];
+}): Promise<boolean> {
   const key = process.env.RESEND_API_KEY;
   if (!key || !opts.to.length) return false;
   try {
@@ -48,6 +55,7 @@ export async function sendEmail(opts: { to: string[]; subject: string; html: str
         subject: opts.subject,
         html: opts.html,
         ...(opts.replyTo ? { reply_to: opts.replyTo } : {}),
+        ...(opts.attachments?.length ? { attachments: opts.attachments } : {}),
       }),
       signal: AbortSignal.timeout(TIMEOUT_MS),
     });

@@ -4,6 +4,8 @@ import { visionTool } from "@sanity/vision";
 import { schemaTypes } from "./schemas";
 import { structure } from "./structure";
 
+const SINGLETONS = new Set(["siteSettings", "advertisePage"]);
+
 /**
  * Indi Radio Studio. Run `npm run dev` here, or deploy with `npm run deploy`
  * (hosted at https://indiradio.sanity.studio). See docs/05-admin-guide.md.
@@ -14,5 +16,9 @@ export default defineConfig({
   projectId: process.env.SANITY_STUDIO_PROJECT_ID || "REPLACE_WITH_PROJECT_ID",
   dataset: process.env.SANITY_STUDIO_DATASET || "production",
   plugins: [structureTool({ structure }), visionTool()],
-  schema: { types: schemaTypes },
+  schema: {
+    types: schemaTypes,
+    // Singletons are opened from the sidebar; don't offer "create new" for them.
+    templates: (templates) => templates.filter(({ schemaType }) => !SINGLETONS.has(schemaType)),
+  },
 });

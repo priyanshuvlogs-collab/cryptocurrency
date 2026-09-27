@@ -1,0 +1,29 @@
+{
+  "_note": "Pages that still show [CONFIRM] while the station confirms facts. Remove a page once it is clean; /en/advertise and /pa/advertise are always strict and can never be listed.",
+  "pages": [
+    "/en",
+    "/en/about",
+    "/en/call-in",
+    "/en/contact",
+    "/en/dedications",
+    "/en/faq",
+    "/en/indi-jaswal",
+    "/en/listen-live",
+    "/en/privacy",
+    "/en/schedule",
+    "/en/shows/bhedan-da-kaal",
+    "/en/terms",
+    "/pa",
+    "/pa/about",
+    "/pa/call-in",
+    "/pa/contact",
+    "/pa/dedications",
+    "/pa/faq",
+    "/pa/indi-jaswal",
+    "/pa/listen-live",
+    "/pa/privacy",
+    "/pa/schedule",
+    "/pa/shows/bhedan-da-kaal",
+    "/pa/terms"
+  ]
+}

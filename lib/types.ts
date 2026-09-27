@@ -38,6 +38,9 @@ export interface SiteSettings {
   tiktokLiveNow: boolean;
   tiktokLiveUrl: string | null;
   mediaKitUrl: string | null;
+  /** Shown in the footer only when set. */
+  socanLicence: string | null;
+  resoundLicence: string | null;
   hostImage: string | null;
   audienceStats: { label: L10n; value: string }[];
 }
@@ -140,10 +143,51 @@ export interface DedicationTier {
 
 export interface AdPackage {
   id: string;
+  /** URL-safe code used in ?package=… and the inquiry form. */
+  slug: string;
+  /** "card" = one of the three package cards; "partner" = the Station Partner strip. */
+  kind: "card" | "partner";
+  /** The partner strip only renders when this is true. Cards render unless explicitly false. */
+  enabled: boolean;
   name: L10n;
   description: L10n;
-  priceNote: L10n;
+  badge?: L10n | null;
+  /** CAD per month. null → "Pricing on request". */
+  priceMonthly: number | null;
+  spotsPerWeek?: string | null;
+  length?: L10n | null;
+  languages?: L10n | null;
+  minimumTerm?: L10n | null;
+  productionIncluded?: boolean | null;
+  monthlyPlayReport?: boolean | null;
+  /** Extra bullet points (used by the partner strip). */
   features: L10n[];
+  /** Show whose confirmed schedule times appear on the card (sponsor package). */
+  showSlug?: string | null;
+}
+
+/** Everything on /advertise that the station edits in the CMS ("Advertise page" singleton). */
+export interface AdvertiseContent {
+  heroImage: string | null;
+  heroImageAlt: L10n | null;
+  stats: {
+    monthlyListeners: string | null;
+    bcListenersPercent: string | null;
+    avgLiveViewers: string | null;
+    callInsPerWeek: string | null;
+    appInstalls: string | null;
+    socialFollowers: string | null;
+    countriesListening: string | null;
+  };
+  /** e.g. "September 2026" – shown in the stats caption. */
+  statsAsOf: string | null;
+  sampleAds: { id: string; title: L10n; transcript: L10n; audioUrl: string; language: "pa" | "en" | "both" }[];
+  idealFor: L10n[];
+  foundingBanner: { enabled: boolean; text: L10n | null; spotsLeft: number | null };
+  testimonials: { id: string; quote: L10n; name: string; business: string | null }[];
+  faq: { id: string; q: L10n; a: L10n | null }[];
+  /** e.g. "one business day" – completes "We reply within …". */
+  replyTime: L10n | null;
 }
 
 export interface PressItem {

@@ -91,8 +91,14 @@
   --on-green: #140b0e;
   background-color: var(--ink);
   color: var(--on-ink);
-  position: relative;
-  isolation: isolate;
+}
+/* Layered so utilities like `fixed` / `sticky` on a band still win
+   (unlayered CSS would override them and un-fix the mini-player). */
+@layer base {
+  .band-ink {
+    position: relative;
+    isolation: isolate;
+  }
 }
 /* film grain on dark bands */
 .band-ink::after {
@@ -657,4 +663,11 @@ html:not(.js) .reveal {
 }
 [data-theme="dark"] .icon-when-light {
   display: none;
+}
+
+/* /advertise: room for the mobile "Get pricing / WhatsApp" bar above the mini-player */
+@media (max-width: 767px) {
+  body.has-ad-bar {
+    padding-bottom: calc(74px + 66px + env(safe-area-inset-bottom));
+  }
 }

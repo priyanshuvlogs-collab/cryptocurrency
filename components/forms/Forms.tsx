@@ -6,7 +6,6 @@ import {
   submitContact,
   submitEventBooking,
   submitSongRequest,
-  submitSponsorInquiry,
   subscribeNewsletter,
 } from "@/app/actions";
 import { useLocale } from "@/components/LocaleProvider";
@@ -43,34 +42,6 @@ export function ContactForm() {
         <SelectField name="topic" label={L(locale, "Topic", "ਵਿਸ਼ਾ")} options={topics.map((x) => ({ value: x, label: x }))} />
       </div>
       <TextArea name="message" label={m.forms.message} required rows={5} maxLength={3000} />
-      <ConsentField />
-    </SmartForm>
-  );
-}
-
-/* ── Sponsor inquiry ────────────────────────────────────────────────── */
-
-export function SponsorForm({ packages }: { packages: { value: string; label: string }[] }) {
-  const { locale, m } = useLocale();
-  return (
-    <SmartForm action={submitSponsorInquiry} event="sponsor_inquiry" submitLabel={L(locale, "Send inquiry", "ਪੁੱਛਗਿੱਛ ਭੇਜੋ")}>
-      <div className="grid gap-5 sm:grid-cols-2">
-        <TextField name="name" label={m.forms.name} autoComplete="name" required />
-        <TextField name="business" label={L(locale, "Business name", "ਕਾਰੋਬਾਰ ਦਾ ਨਾਂ")} autoComplete="organization" required />
-        <TextField name="email" type="email" label={m.forms.email} autoComplete="email" required />
-        <TextField name="phone" type="tel" label={m.forms.phone} autoComplete="tel" inputMode="tel" required />
-        <SelectField
-          name="package"
-          label={L(locale, "Interested in", "ਕਿਸ ਵਿੱਚ ਦਿਲਚਸਪੀ ਹੈ")}
-          options={[...packages, { value: "not-sure", label: L(locale, "Not sure yet", "ਅਜੇ ਪੱਕਾ ਨਹੀਂ") }]}
-        />
-        <SelectField
-          name="budget"
-          label={L(locale, "Monthly budget (CAD)", "ਮਹੀਨਾਵਾਰ ਬਜਟ (CAD)")}
-          options={["< $500", "$500–$1,500", "$1,500–$5,000", "$5,000+"].map((v) => ({ value: v, label: v }))}
-        />
-      </div>
-      <TextArea name="message" label={L(locale, "Tell us about your goals", "ਆਪਣੇ ਟੀਚਿਆਂ ਬਾਰੇ ਦੱਸੋ")} rows={4} maxLength={3000} />
       <ConsentField />
     </SmartForm>
   );

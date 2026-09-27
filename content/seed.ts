@@ -5,6 +5,7 @@
  */
 import type {
   AdPackage,
+  AdvertiseContent,
   Announcement,
   CommunityEvent,
   DedicationTier,
@@ -271,50 +272,140 @@ export const dedicationTiers: DedicationTier[] = [
   },
 ];
 
+/**
+ * Advertising packages. Prices and per-package details (spots per week,
+ * length, minimum term…) are intentionally empty: they come from the CMS and
+ * each row is hidden until it is filled in. Empty price → "Pricing on request".
+ */
 export const adPackages: AdPackage[] = [
   {
-    id: "spot",
+    id: "on-air-spots",
+    slug: "on-air-spots",
+    kind: "card",
+    enabled: true,
     name: { en: "On-Air Spots", pa: "ਆਨ-ਏਅਰ ਇਸ਼ਤਿਹਾਰ" },
     description: {
-      en: "Radio ads read by the host or produced for your brand, placed in live shows.",
-      pa: "ਹੋਸਟ ਵੱਲੋਂ ਪੜ੍ਹੇ ਜਾਂ ਤੁਹਾਡੇ ਬ੍ਰਾਂਡ ਲਈ ਤਿਆਰ ਕੀਤੇ ਰੇਡੀਓ ਇਸ਼ਤਿਹਾਰ, ਲਾਈਵ ਸ਼ੋਆਂ ਵਿੱਚ।",
+      en: "Produced ads for your brand in regular rotation.",
+      pa: "ਤੁਹਾਡੇ ਬ੍ਰਾਂਡ ਲਈ ਤਿਆਰ ਕੀਤੇ ਇਸ਼ਤਿਹਾਰ, ਜੋ ਹਰ ਹਫ਼ਤੇ ਵਾਰ-ਵਾਰ ਚੱਲਦੇ ਹਨ।",
     },
-    priceNote: { en: "From [CONFIRM] / month", pa: "[CONFIRM] / ਮਹੀਨੇ ਤੋਂ ਸ਼ੁਰੂ" },
-    features: [
-      { en: "Host-read or produced spots", pa: "ਹੋਸਟ ਵੱਲੋਂ ਪੜ੍ਹੇ ਜਾਂ ਤਿਆਰ ਇਸ਼ਤਿਹਾਰ" },
-      { en: "English and Punjabi", pa: "ਅੰਗਰੇਜ਼ੀ ਅਤੇ ਪੰਜਾਬੀ" },
-      { en: "Monthly play report", pa: "ਮਹੀਨਾਵਾਰ ਰਿਪੋਰਟ" },
-    ],
+    priceMonthly: null,
+    features: [],
   },
   {
-    id: "show-sponsor",
-    name: { en: "Show Sponsor", pa: "ਸ਼ੋਅ ਸਪਾਂਸਰ" },
+    id: "live-host-read",
+    slug: "live-host-read",
+    kind: "card",
+    enabled: true,
+    name: { en: "Live Host-Read", pa: "ਲਾਈਵ ਹੋਸਟ-ਰੀਡ" },
     description: {
-      en: "Your business presents a show, with opening and closing mentions and a logo on the website.",
-      pa: "ਤੁਹਾਡਾ ਕਾਰੋਬਾਰ ਸ਼ੋਅ ਪੇਸ਼ ਕਰੇ: ਸ਼ੁਰੂ ਅਤੇ ਅਖ਼ੀਰ ਵਿੱਚ ਜ਼ਿਕਰ, ਅਤੇ ਵੈੱਬਸਾਈਟ ’ਤੇ ਲੋਗੋ।",
+      en: "Indi reads your message live on Bhedan Da Kaal.",
+      pa: "ਇੰਡੀ ਤੁਹਾਡਾ ਸੁਨੇਹਾ ‘ਭੇਡਾਂ ਦਾ ਕਾਲ’ ’ਤੇ ਆਪ ਲਾਈਵ ਪੜ੍ਹਦੇ ਹਨ।",
     },
-    priceNote: { en: "From [CONFIRM] / month", pa: "[CONFIRM] / ਮਹੀਨੇ ਤੋਂ ਸ਼ੁਰੂ" },
-    features: [
-      { en: "“Brought to you by” mentions", pa: "“ਤੁਹਾਡੇ ਲਈ ਪੇਸ਼ ਕਰਦੇ ਹਨ” ਜ਼ਿਕਰ" },
-      { en: "Logo on the show page and sponsor strip", pa: "ਸ਼ੋਅ ਪੰਨੇ ਅਤੇ ਸਪਾਂਸਰ ਪੱਟੀ ’ਤੇ ਲੋਗੋ" },
-      { en: "Social media mentions", pa: "ਸੋਸ਼ਲ ਮੀਡੀਆ ’ਤੇ ਜ਼ਿਕਰ" },
-    ],
+    badge: { en: "Most popular", pa: "ਸਭ ਤੋਂ ਵੱਧ ਪਸੰਦ" },
+    priceMonthly: null,
+    features: [],
   },
   {
-    id: "presenting",
-    name: { en: "Presenting Partner", pa: "ਪ੍ਰੈਜ਼ੈਂਟਿੰਗ ਪਾਰਟਨਰ" },
+    id: "bhedan-da-kaal-sponsor",
+    slug: "bhedan-da-kaal-sponsor",
+    kind: "card",
+    enabled: true,
+    name: { en: "Bhedan Da Kaal Sponsor", pa: "‘ਭੇਡਾਂ ਦਾ ਕਾਲ’ ਸਪਾਂਸਰ" },
     description: {
-      en: "Station-wide partnership for community leaders: live remotes, events and year-round presence.",
-      pa: "ਭਾਈਚਾਰੇ ਦੇ ਮੋਹਰੀ ਕਾਰੋਬਾਰਾਂ ਲਈ ਪੂਰੇ ਸਟੇਸ਼ਨ ਦੀ ਭਾਈਵਾਲੀ: ਲਾਈਵ ਪ੍ਰਸਾਰਣ, ਸਮਾਗਮ ਅਤੇ ਸਾਰਾ ਸਾਲ ਹਾਜ਼ਰੀ।",
+      en: "“Bhedan Da Kaal, presented by Your Business” at the open and close, your logo on the show page and sponsor strip, and social mentions.",
+      pa: "ਸ਼ੋਅ ਦੇ ਸ਼ੁਰੂ ਅਤੇ ਅਖ਼ੀਰ ਵਿੱਚ “‘ਭੇਡਾਂ ਦਾ ਕਾਲ’, ਤੁਹਾਡੇ ਕਾਰੋਬਾਰ ਵੱਲੋਂ ਪੇਸ਼”, ਸ਼ੋਅ ਦੇ ਪੰਨੇ ਅਤੇ ਸਪਾਂਸਰ ਪੱਟੀ ’ਤੇ ਤੁਹਾਡਾ ਲੋਗੋ, ਅਤੇ ਸੋਸ਼ਲ ਮੀਡੀਆ ’ਤੇ ਜ਼ਿਕਰ।",
     },
-    priceNote: { en: "Custom quote", pa: "ਤੁਹਾਡੀ ਲੋੜ ਮੁਤਾਬਕ ਕੀਮਤ" },
+    priceMonthly: null,
+    features: [],
+    showSlug: "bhedan-da-kaal",
+  },
+  {
+    id: "station-partner",
+    slug: "station-partner",
+    kind: "partner",
+    // Hidden until the station switches it on in the CMS.
+    enabled: false,
+    name: { en: "Station Partner", pa: "ਸਟੇਸ਼ਨ ਪਾਰਟਨਰ" },
+    description: {
+      en: "For businesses that want to own the moment, all year round.",
+      pa: "ਉਹਨਾਂ ਕਾਰੋਬਾਰਾਂ ਲਈ ਜੋ ਸਾਰਾ ਸਾਲ ਭਾਈਚਾਰੇ ਦੇ ਹਰ ਖ਼ਾਸ ਮੌਕੇ ’ਤੇ ਅੱਗੇ ਦਿਸਣਾ ਚਾਹੁੰਦੇ ਹਨ।",
+    },
+    priceMonthly: null,
     features: [
-      { en: "Live broadcast from your location [CONFIRM]", pa: "ਤੁਹਾਡੀ ਥਾਂ ਤੋਂ ਲਾਈਵ ਪ੍ਰਸਾਰਣ [CONFIRM]" },
-      { en: "Event and contest naming rights", pa: "ਸਮਾਗਮ ਅਤੇ ਮੁਕਾਬਲਿਆਂ ’ਤੇ ਤੁਹਾਡਾ ਨਾਂ" },
-      { en: "Top placement across the website and app", pa: "ਵੈੱਬਸਾਈਟ ਅਤੇ ਐਪ ’ਤੇ ਸਭ ਤੋਂ ਉੱਪਰ ਥਾਂ" },
+      { en: "Event and contest naming rights", pa: "ਸਮਾਗਮਾਂ ਅਤੇ ਮੁਕਾਬਲਿਆਂ ’ਤੇ ਤੁਹਾਡਾ ਨਾਂ" },
+      { en: "Top placement on the website and app", pa: "ਵੈੱਬਸਾਈਟ ਅਤੇ ਐਪ ’ਤੇ ਸਭ ਤੋਂ ਉੱਪਰ ਥਾਂ" },
+      { en: "Live remote broadcasts", pa: "ਤੁਹਾਡੀ ਥਾਂ ਤੋਂ ਲਾਈਵ ਪ੍ਰਸਾਰਣ" },
     ],
   },
 ];
+
+/**
+ * Advertise page defaults. Every audience figure, sample ad, testimonial,
+ * founding-sponsor offer and reply time is empty on purpose – those only
+ * come from the CMS. The "Ideal for" list and the advertiser FAQ questions
+ * are the station's own wording from the brief.
+ */
+export const advertiseContent: AdvertiseContent = {
+  heroImage: null,
+  heroImageAlt: null,
+  stats: {
+    monthlyListeners: null,
+    bcListenersPercent: null,
+    avgLiveViewers: null,
+    callInsPerWeek: null,
+    appInstalls: null,
+    socialFollowers: null,
+    countriesListening: null,
+  },
+  statsAsOf: null,
+  sampleAds: [],
+  idealFor: [
+    { en: "Realtors", pa: "ਰੀਅਲਟਰ" },
+    { en: "Mortgage brokers", pa: "ਮੌਰਗੇਜ ਬ੍ਰੋਕਰ" },
+    { en: "Immigration consultants", pa: "ਇਮੀਗ੍ਰੇਸ਼ਨ ਸਲਾਹਕਾਰ" },
+    { en: "Travel agencies", pa: "ਟ੍ਰੈਵਲ ਏਜੰਸੀਆਂ" },
+    { en: "Restaurants & sweet shops", pa: "ਰੈਸਟੋਰੈਂਟ ਅਤੇ ਮਿਠਾਈ ਦੀਆਂ ਦੁਕਾਨਾਂ" },
+    { en: "Jewellers", pa: "ਜਿਊਲਰ" },
+    { en: "Auto dealers", pa: "ਗੱਡੀਆਂ ਦੇ ਡੀਲਰ" },
+    { en: "Banquet halls & wedding services", pa: "ਬੈਂਕੁਇਟ ਹਾਲ ਅਤੇ ਵਿਆਹ ਸੇਵਾਵਾਂ" },
+    { en: "Accountants & lawyers", pa: "ਅਕਾਊਂਟੈਂਟ ਅਤੇ ਵਕੀਲ" },
+    { en: "Insurance", pa: "ਇੰਸ਼ੋਰੈਂਸ" },
+    { en: "Driving schools", pa: "ਡਰਾਈਵਿੰਗ ਸਕੂਲ" },
+  ],
+  foundingBanner: { enabled: false, text: null, spotsLeft: null },
+  testimonials: [],
+  faq: [
+    { id: "min-budget", q: { en: "What’s the minimum budget?", pa: "ਘੱਟੋ-ਘੱਟ ਬਜਟ ਕਿੰਨਾ ਚਾਹੀਦਾ ਹੈ?" }, a: null },
+    { id: "how-soon", q: { en: "How soon can my ad go live?", pa: "ਮੇਰੀ ਮਸ਼ਹੂਰੀ ਕਿੰਨੀ ਜਲਦੀ ਚੱਲ ਸਕਦੀ ਹੈ?" }, a: null },
+    {
+      id: "write-record",
+      q: { en: "Do you write and record the ad?", pa: "ਕੀ ਤੁਸੀਂ ਮਸ਼ਹੂਰੀ ਆਪ ਲਿਖਦੇ ਅਤੇ ਰਿਕਾਰਡ ਕਰਦੇ ਹੋ?" },
+      a: {
+        en: "Yes. We write and record your ad in Punjabi, English or both, and you approve it before it goes on air.",
+        pa: "ਹਾਂ ਜੀ। ਅਸੀਂ ਤੁਹਾਡੀ ਮਸ਼ਹੂਰੀ ਪੰਜਾਬੀ, ਅੰਗਰੇਜ਼ੀ ਜਾਂ ਦੋਵਾਂ ਵਿੱਚ ਲਿਖ ਕੇ ਰਿਕਾਰਡ ਕਰਦੇ ਹਾਂ, ਅਤੇ ਚੱਲਣ ਤੋਂ ਪਹਿਲਾਂ ਤੁਸੀਂ ਇਸਨੂੰ ਸੁਣ ਕੇ ਪਾਸ ਕਰਦੇ ਹੋ।",
+      },
+    },
+    {
+      id: "languages",
+      q: { en: "Can I advertise in Punjabi and English?", pa: "ਕੀ ਮੈਂ ਪੰਜਾਬੀ ਅਤੇ ਅੰਗਰੇਜ਼ੀ ਦੋਵਾਂ ਵਿੱਚ ਮਸ਼ਹੂਰੀ ਕਰ ਸਕਦਾ/ਸਕਦੀ ਹਾਂ?" },
+      a: {
+        en: "Yes. Your ad can run in Punjabi, English or both, whichever suits your customers best.",
+        pa: "ਹਾਂ ਜੀ। ਤੁਹਾਡੀ ਮਸ਼ਹੂਰੀ ਪੰਜਾਬੀ, ਅੰਗਰੇਜ਼ੀ ਜਾਂ ਦੋਵਾਂ ਵਿੱਚ ਚੱਲ ਸਕਦੀ ਹੈ, ਜਿਵੇਂ ਤੁਹਾਡੇ ਗਾਹਕਾਂ ਲਈ ਠੀਕ ਹੋਵੇ।",
+      },
+    },
+    { id: "where", q: { en: "Where are your listeners?", pa: "ਤੁਹਾਡੇ ਸਰੋਤੇ ਕਿੱਥੇ ਹਨ?" }, a: null },
+    {
+      id: "working",
+      q: { en: "How will I know it’s working?", pa: "ਮੈਨੂੰ ਕਿਵੇਂ ਪਤਾ ਲੱਗੇਗਾ ਕਿ ਮਸ਼ਹੂਰੀ ਕੰਮ ਕਰ ਰਹੀ ਹੈ?" },
+      a: {
+        en: "You get a monthly play report showing when your ad ran. We can also add an offer code or a “mention Indi Radio” deal, so you can count the customers who come from the station.",
+        pa: "ਤੁਹਾਨੂੰ ਹਰ ਮਹੀਨੇ ਪਲੇਅ ਰਿਪੋਰਟ ਮਿਲਦੀ ਹੈ ਕਿ ਤੁਹਾਡੀ ਮਸ਼ਹੂਰੀ ਕਦੋਂ-ਕਦੋਂ ਚੱਲੀ। ਅਸੀਂ ਕੋਈ ਆਫ਼ਰ ਕੋਡ ਜਾਂ “ਇੰਡੀ ਰੇਡੀਓ ਦਾ ਨਾਂ ਲਓ” ਵਾਲੀ ਡੀਲ ਵੀ ਰੱਖ ਸਕਦੇ ਹਾਂ, ਤਾਂ ਜੋ ਤੁਸੀਂ ਗਿਣ ਸਕੋ ਕਿ ਕਿੰਨੇ ਗਾਹਕ ਰੇਡੀਓ ਰਾਹੀਂ ਆਏ।",
+      },
+    },
+    { id: "event", q: { en: "Can I sponsor an event?", pa: "ਕੀ ਮੈਂ ਕਿਸੇ ਸਮਾਗਮ ਨੂੰ ਸਪਾਂਸਰ ਕਰ ਸਕਦਾ/ਸਕਦੀ ਹਾਂ?" }, a: null },
+  ],
+  replyTime: null,
+};
 
 export const sponsors: Sponsor[] = [];
 export const events: CommunityEvent[] = [];

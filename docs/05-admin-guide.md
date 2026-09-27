@@ -42,7 +42,7 @@ It appears as a pink bar at the top of every page. Only the newest active one sh
 
 ## 🤝 Adding a sponsor
 **Sponsors** → **+** → **Name**, **Logo** (PNG/SVG with a transparent background, at least 320px wide), **Website**, **Tier** → optional **Show on the site until** date → Publish.
-Logos scroll in the sponsor strip on the Home and Advertise pages. After the end date, the sponsor disappears automatically.
+Logos scroll in the sponsor strip on the Home page. On the Advertise page the logos scroll only once there are 3 or more sponsors (fewer are shown as a simple row). After the end date, the sponsor disappears automatically.
 
 ## 🎪 Events
 **Events** → **+** → title, date and time, venue, city, optional Google Maps and ticket links, and a photo. Tick **Indi Radio broadcasts live from this event** if you'll be on air. Upcoming events show on /events and are sent to Google as events. Past events move to "Past events" automatically.
@@ -55,9 +55,35 @@ Logos scroll in the sponsor strip on the Home and Advertise pages. After the end
 Paid bookings arrive by **email** and in **GoHighLevel** (tagged `form:dedication_paid`), with the name, message, date and song. The customer gets an email receipt and a WhatsApp button to confirm the air time with you.
 
 ## 💼 Advertising
-- **Advertising packages:** names, price notes, what's included.
-- **⚙️ Site settings → Media & stats:** upload the **Media kit (PDF)** and update the **Audience stats**.
-- Inquiries from the Advertise page arrive by email and in GoHighLevel (`form:sponsor`).
+
+**Golden rule:** the Advertise page never shows made-up numbers. Any field left empty, or still containing `[CONFIRM`, is hidden, along with its whole section if nothing in it is filled in. Fill a field in and it appears within about 5 minutes.
+
+**📢 Advertise page** (sidebar):
+
+| Tab | Field | Shows up as |
+| --- | --- | --- |
+| Hero | Photo of Indi (hero) + alt text | Photo next to the headline (falls back to Site settings → Photo of Indi Jaswal) |
+| Audience stats | Monthly listeners, % of listeners in BC, Average live viewers, Call-ins per week, App installs, Social followers, Countries listening | Stat cards, in that order. Needs **at least 2** filled in, otherwise the row is hidden |
+| Audience stats | Figures updated (month / year) | “Source: stream and platform analytics, updated …” |
+| Samples & testimonials | Sample ads (up to 3: title, audio file, language, transcript) | “Hear a sample ad” players. None → section hidden |
+| Samples & testimonials | Advertiser testimonials (up to 2: quote, name, business) | Quotes under the sponsor logos. Real quotes, with permission |
+| Packages extras | “Ideal for” business types | Chips, plus the “Type of business” options in the form |
+| Packages extras | Founding-sponsor banner (show, text, spots left) | Banner above the packages |
+| FAQ & contact | Advertiser FAQ (question + answer) | Accordion. Questions without an answer stay hidden |
+| FAQ & contact | We reply within… | “We reply within …” next to the form and in the thank-you message |
+
+**💼 Advertising packages** (one document per package):
+- **Package code:** used in links like `?package=live-host-read`. Don’t change it once the page is live.
+- **Shown as:** *Package card* (the three cards) or *Station Partner strip*. The strip only appears when **Show on the website** is ON.
+- **Starting price (CAD per month):** empty → “Pricing on request”.
+- **Badge** (e.g. “Most popular”), **Spots per week**, **Spot length**, **Languages**, **Minimum term**, **Ad production included**, **Monthly play report**: each row appears only when filled in.
+- **Sponsored show:** its confirmed schedule days and times appear on the card.
+
+**⚙️ Site settings → Media & stats → Media kit (PDF):** once uploaded, the page shows a download link, and anyone who ticks “Email me the media kit” gets it by email automatically.
+
+Inquiries from the Advertise page arrive by email and in GoHighLevel (`form:sponsor`), with the package, budget, preferred contact and language.
+
+**Build check:** `npm run build` fails if `[CONFIRM` appears on /en/advertise or /pa/advertise, or on any page not listed in `scripts/confirm-baseline.json`. When you finish confirming a page, remove it from that list.
 
 ## ❓ FAQ
 **FAQ** → **+** → question + answer in both languages. Aim for **40–60 words**: that length is what Google and AI assistants quote. Choose a category and a sort order.
@@ -72,6 +98,8 @@ New YouTube uploads appear on the site **automatically** within 30 minutes. Use 
 The "Latest from Indi Radio" strip shows recent YouTube videos automatically. To add a TikTok, Instagram or Facebook post, go to **Social posts** → **+** → platform, link, caption, thumbnail.
 
 ## ⚙️ Site settings (rarely changed)
+
+- **Apps & social → SOCAN / Re:Sound licence number:** shown in the footer only when filled in. Social icons in the footer also appear only for the links you fill in.
 Call-in number, WhatsApp number and channel link, email, stream URL, app store links, social profiles, YouTube channel ID, and Indi's photo. Changes here update the whole site, the Google structured data and `/llms.txt`.
 
 ---

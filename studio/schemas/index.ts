@@ -2,7 +2,7 @@ import { localeString, localeText } from "./locale";
 import { siteSettings } from "./siteSettings";
 import { show } from "./show";
 import { scheduleSlot, specialBroadcast } from "./schedule";
-import { adPackage, announcement, contest, dedicationTier, episode, event, faq, pressItem, socialPost, sponsor } from "./content";
+import { adPackage, advertisePage, announcement, contest, dedicationTier, episode, event, faq, pressItem, socialPost, sponsor } from "./content";
 
 export const schemaTypes = [
   localeString,
@@ -18,6 +18,7 @@ export const schemaTypes = [
   announcement,
   dedicationTier,
   adPackage,
+  advertisePage,
   pressItem,
   socialPost,
   contest,

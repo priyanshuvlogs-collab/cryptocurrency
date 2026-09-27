@@ -13,6 +13,7 @@ export const structure: StructureResolver = (S) =>
       S.documentTypeListItem("show").title("🎙️ Shows"),
       S.documentTypeListItem("episode").title("▶️ Featured episodes"),
       S.divider(),
+      S.listItem().title("📢 Advertise page").id("advertisePage").child(S.document().schemaType("advertisePage").documentId("advertisePage")),
       S.documentTypeListItem("sponsor").title("🤝 Sponsors"),
       S.documentTypeListItem("adPackage").title("💼 Advertising packages"),
       S.documentTypeListItem("dedicationTier").title("🎂 Dedication packages"),

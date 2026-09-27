@@ -63,7 +63,24 @@ export function EpisodeGrid({ episodes, locale, m }: { episodes: Episode[]; loca
 
 /* ── Sponsors ──────────────────────────────────────────────────────── */
 
-export function SponsorStrip({ sponsors, locale, m }: { sponsors: Sponsor[]; locale: Locale; m: Messages }) {
+/**
+ * Sponsor marquee. Duplicated items (needed for the seamless loop) are
+ * aria-hidden and unfocusable; the loop stops under prefers-reduced-motion
+ * (see .marquee-track in globals.css). `linkHref` lets a page point the
+ * "become a sponsor" link somewhere else (e.g. #inquiry on /advertise).
+ */
+export function SponsorStrip({
+  sponsors,
+  locale,
+  m,
+  linkHref,
+}: {
+  sponsors: Sponsor[];
+  locale: Locale;
+  m: Messages;
+  linkHref?: string;
+}) {
+  const sponsorLink = linkHref || `/${locale}/advertise`;
   const filler = locale === "pa" ? ["ਤੁਹਾਡਾ ਕਾਰੋਬਾਰ ਇੱਥੇ", "Your business here"] : ["Your business here", "ਤੁਹਾਡਾ ਕਾਰੋਬਾਰ ਇੱਥੇ"];
   return (
     <section aria-labelledby="sponsors-title" className="band-ink overflow-hidden py-10">
@@ -71,7 +88,7 @@ export function SponsorStrip({ sponsors, locale, m }: { sponsors: Sponsor[]; loc
         <h2 id="sponsors-title" className="eyebrow">
           {m.sponsors.title}
         </h2>
-        <Link href={`/${locale}/advertise`} className="link">
+        <Link href={sponsorLink} className="link">
           {m.sponsors.becomeSponsor}
         </Link>
       </div>

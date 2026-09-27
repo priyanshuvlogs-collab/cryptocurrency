@@ -56,15 +56,26 @@ export const DEFAULT_SETTINGS: SiteSettings = {
   youtubeChannelId: process.env.YOUTUBE_CHANNEL_ID || null,
   tiktokLiveNow: false,
   tiktokLiveUrl: null,
-  mediaKitUrl: null, // [CONFIRM] upload media kit PDF in the CMS
+  mediaKitUrl: null, // upload the media kit PDF in the CMS (Site settings → Media & stats)
+  socanLicence: null, // SOCAN licence number – footer shows it only when set
+  resoundLicence: null, // Re:Sound licence number – footer shows it only when set
   hostImage: null, // [CONFIRM] upload a licensed photo of Indi Jaswal in the CMS
-  audienceStats: [
-    { label: { en: "Monthly listeners", pa: "ਮਹੀਨਾਵਾਰ ਸਰੋਤੇ" }, value: "[CONFIRM]" },
-    { label: { en: "App installs", pa: "ਐਪ ਇੰਸਟਾਲ" }, value: "[CONFIRM]" },
-    { label: { en: "Social followers", pa: "ਸੋਸ਼ਲ ਫ਼ਾਲੋਅਰ" }, value: "[CONFIRM]" },
-    { label: { en: "Countries listening", pa: "ਸੁਣਨ ਵਾਲੇ ਦੇਸ਼" }, value: "6+" },
-  ],
+  // Audience figures now live in the "Advertise page" CMS document (never hard-coded).
+  audienceStats: [],
 };
+
+/**
+ * True when a CMS value is really filled in. Empty strings and anything still
+ * marked "[CONFIRM" count as missing, so the element is hidden rather than
+ * showing placeholder text.
+ */
+export function isFilled(value: unknown): boolean {
+  if (value === null || value === undefined) return false;
+  if (typeof value === "number") return Number.isFinite(value);
+  if (typeof value === "object") return isFilled((value as Partial<L10n>).en);
+  const str = String(value).trim();
+  return str !== "" && !str.includes("[CONFIRM");
+}
 
 export function t(value: L10n | undefined | null, locale: Locale): string {
   if (!value) return "";

@@ -2,11 +2,11 @@
 
 import { redirect } from "next/navigation";
 import { z } from "zod";
-import { getDedicationTiers, getSettings } from "@/lib/cms";
-import { deliverLead, type Lead } from "@/lib/forms/deliver";
+import { getAdPackages, getAdvertiseContent, getDedicationTiers, getSettings } from "@/lib/cms";
+import { deliverLead, escapeHtml, sendEmail, type Lead } from "@/lib/forms/deliver";
 import { looksLikeBot, rateLimited } from "@/lib/forms/protect";
 import { getMessages, isLocale } from "@/lib/i18n";
-import { SITE_URL, t, whatsappLink } from "@/lib/site";
+import { SITE_URL, isFilled, t, whatsappLink } from "@/lib/site";
 import { createCheckoutSession, stripeEnabled } from "@/lib/stripe";
 import type { Locale } from "@/lib/types";
 
@@ -19,8 +19,20 @@ export interface FormState {
 }
 
 const FIELD_MSG = {
-  en: { required: "This field is required.", email: "Please enter a valid email address.", tooLong: "This is too long." },
-  pa: { required: "ਇਹ ਖ਼ਾਨਾ ਲਾਜ਼ਮੀ ਹੈ।", email: "ਕਿਰਪਾ ਕਰਕੇ ਸਹੀ ਈਮੇਲ ਪਤਾ ਲਿਖੋ।", tooLong: "ਇਹ ਬਹੁਤ ਲੰਮਾ ਹੈ।" },
+  en: {
+    required: "This field is required.",
+    email: "Please enter a valid email address.",
+    tooLong: "This is too long.",
+    contactNeeded: "Add a phone/WhatsApp number or an email so we can reach you.",
+    emailForKit: "Add your email so we can send you the media kit.",
+  },
+  pa: {
+    required: "ਇਹ ਖ਼ਾਨਾ ਲਾਜ਼ਮੀ ਹੈ।",
+    email: "ਕਿਰਪਾ ਕਰਕੇ ਸਹੀ ਈਮੇਲ ਪਤਾ ਲਿਖੋ।",
+    tooLong: "ਇਹ ਬਹੁਤ ਲੰਮਾ ਹੈ।",
+    contactNeeded: "ਫ਼ੋਨ/WhatsApp ਨੰਬਰ ਜਾਂ ਈਮੇਲ ਵਿੱਚੋਂ ਇੱਕ ਜ਼ਰੂਰ ਲਿਖੋ, ਤਾਂ ਜੋ ਅਸੀਂ ਤੁਹਾਡੇ ਨਾਲ ਸੰਪਰਕ ਕਰ ਸਕੀਏ।",
+    emailForKit: "ਮੀਡੀਆ ਕਿੱਟ ਭੇਜਣ ਲਈ ਆਪਣੀ ਈਮੇਲ ਲਿਖੋ।",
+  },
 };
 
 const str = (max = 200) => z.string().trim().min(1, "required").max(max, "tooLong");
@@ -96,36 +108,103 @@ export async function submitContact(_prev: FormState, fd: FormData): Promise<For
   return finish({ type: "contact", name, email: em, phone, locale: g.locale, fields: { topic, message } }, g.locale);
 }
 
-/* ── Sponsor / advertising inquiry ──────────────────────────────────── */
+/* ── Sponsor / advertising inquiry (/advertise) ───────────────────── */
 
 export async function submitSponsorInquiry(_prev: FormState, fd: FormData): Promise<FormState> {
+  const optEmail = z.union([z.literal(""), z.string().trim().max(200, "tooLong").email("email")]).optional().default("");
   const g = await guard(
     "sponsor",
     fd,
-    z.object({
-      name: str(),
-      business: str(),
-      email,
-      phone: str(40),
-      package: optStr(60),
-      budget: optStr(60),
-      message: optStr(3000),
-      consent,
-    }),
+    z
+      .object({
+        name: str(),
+        business: str(),
+        phone: optStr(40),
+        email: optEmail,
+        contactPref: z.enum(["whatsapp", "call", "email"]).optional(),
+        language: z.enum(["pa", "en"]).optional(),
+        businessType: optStr(80),
+        package: optStr(60),
+        budget: optStr(60),
+        message: optStr(3000),
+        mediaKit: z.literal("on").optional(),
+        consent,
+      })
+      .superRefine((d, ctx) => {
+        // At least one way to reach them; email is required for the media kit.
+        if (!d.phone && !d.email) {
+          ctx.addIssue({ code: "custom", path: ["phone"], message: "contactNeeded" });
+          ctx.addIssue({ code: "custom", path: ["email"], message: "contactNeeded" });
+        } else if (d.mediaKit && !d.email) {
+          ctx.addIssue({ code: "custom", path: ["email"], message: "emailForKit" });
+        }
+      }),
   );
   if (!g.ok) return g.state;
-  const { name, business, email: em, phone, message } = g.data;
-  return finish(
-    {
-      type: "sponsor",
-      name,
-      email: em,
-      phone,
-      locale: g.locale,
-      fields: { business, package: g.data.package, budget: g.data.budget, message },
+  const { locale, data } = g;
+  const [settings, packages, content] = await Promise.all([getSettings(), getAdPackages(), getAdvertiseContent()]);
+  const pkg = packages.find((p) => p.slug === data.package);
+  const wantsKit = data.mediaKit === "on";
+  const kitUrl = isFilled(settings.mediaKitUrl) ? settings.mediaKitUrl : null;
+
+  const delivered = await deliverLead({
+    type: "sponsor",
+    name: data.name,
+    email: data.email,
+    phone: data.phone,
+    locale,
+    fields: {
+      business: data.business,
+      business_type: data.businessType,
+      package: pkg ? t(pkg.name, "en") : data.package,
+      package_slug: data.package,
+      budget: data.budget,
+      preferred_contact: data.contactPref,
+      preferred_language: data.language === "pa" ? "Punjabi" : data.language === "en" ? "English" : undefined,
+      media_kit_requested: wantsKit ? "yes" : "no",
+      message: data.message,
     },
-    g.locale,
-  );
+  });
+  if (!delivered) return { status: "error", message: getMessages(locale).forms.error };
+
+  // Media kit PDF goes out automatically when it exists and was asked for.
+  let kitSent = false;
+  if (wantsKit && kitUrl && data.email) {
+    const pa = (data.language || locale) === "pa";
+    kitSent = await sendEmail({
+      to: [data.email],
+      subject: pa ? "ਇੰਡੀ ਰੇਡੀਓ ਮੀਡੀਆ ਕਿੱਟ" : "Indi Radio media kit",
+      html: `<div style="font-family:sans-serif;font-size:15px;line-height:1.6">
+        <p>${pa ? `ਸਤਿ ਸ੍ਰੀ ਅਕਾਲ ${escapeHtml(data.name)} ਜੀ,` : `Hi ${escapeHtml(data.name)},`}</p>
+        <p>${pa ? "ਇੰਡੀ ਰੇਡੀਓ ਦੀ ਮੀਡੀਆ ਕਿੱਟ ਨਾਲ ਲੱਗੀ ਹੈ।" : "Thanks for your interest in advertising on Indi Radio. The media kit is attached."}</p>
+        <p><a href="${escapeHtml(kitUrl)}">${pa ? "ਮੀਡੀਆ ਕਿੱਟ ਖੋਲ੍ਹੋ (PDF)" : "Open the media kit (PDF)"}</a></p>
+        <p>Indi Radio · Surrey, BC · ${escapeHtml(settings.phoneDisplay)}</p></div>`,
+      attachments: [{ filename: "Indi-Radio-media-kit.pdf", path: kitUrl }],
+    });
+  }
+
+  const reply = isFilled(content.replyTime) ? t(content.replyTime, locale) : null;
+  const parts =
+    locale === "pa"
+      ? [
+          `ਧੰਨਵਾਦ, ${data.name} ਜੀ! ਤੁਹਾਡੀ ਜਾਣਕਾਰੀ ਸਾਨੂੰ ਮਿਲ ਗਈ ਹੈ।`,
+          reply ? `ਅਸੀਂ ${reply} ਦੇ ਅੰਦਰ ਜਵਾਬ ਦਿੰਦੇ ਹਾਂ।` : "ਅਸੀਂ ਜਲਦੀ ਤੁਹਾਡੇ ਨਾਲ ਸੰਪਰਕ ਕਰਾਂਗੇ।",
+          wantsKit ? (kitSent ? "ਮੀਡੀਆ ਕਿੱਟ ਤੁਹਾਡੀ ਈਮੇਲ ’ਤੇ ਭੇਜ ਦਿੱਤੀ ਹੈ।" : "ਮੀਡੀਆ ਕਿੱਟ ਟੀਮ ਤੁਹਾਨੂੰ ਭੇਜ ਦੇਵੇਗੀ।") : "",
+        ]
+      : [
+          `Thank you, ${data.name}! We’ve got your details.`,
+          reply ? `We reply within ${reply}.` : "We’ll be in touch soon.",
+          wantsKit ? (kitSent ? "The media kit is on its way to your inbox." : "The team will send you the media kit.") : "",
+        ];
+  const waText =
+    locale === "pa"
+      ? `ਸਤਿ ਸ੍ਰੀ ਅਕਾਲ ਇੰਡੀ ਰੇਡੀਓ, ਮੈਂ ਹੁਣੇ ${data.business} ਦੀ ਮਸ਼ਹੂਰੀ ਬਾਰੇ ਫ਼ਾਰਮ ਭੇਜਿਆ ਹੈ।`
+      : `Hi Indi Radio, I just sent an advertising inquiry for ${data.business}.`;
+  return {
+    status: "success",
+    message: parts.filter(Boolean).join(" "),
+    followUp: { href: whatsappLink(settings.whatsappNumber, waText), label: locale === "pa" ? "WhatsApp ’ਤੇ ਗੱਲ ਕਰੋ" : "Chat on WhatsApp" },
+  };
 }
 
 /* ── Song request & contest entry ───────────────────────────────────── */
