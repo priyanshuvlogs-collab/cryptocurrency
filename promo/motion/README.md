@@ -42,6 +42,24 @@ A 32 s brand film in the style of the big drinks ads: no UI, just moments from P
 
 **Photos:** each moment has a `photo` prop (Props panel or `src/v3/Film.tsx`). Put a vertical photo in `public/film/` (e.g. `film/chai.jpg`) and set it. The moment then plays it full-bleed with a slow Ken Burns push and the same words and ribbon. Without a photo it uses the animated line illustration.
 
+## Heartfelt film: "ਘਰ ਦੀ ਆਵਾਜ਼" (`IndiRadioHome`)
+
+A 33 s film that is quiet and respectful, with no jokes and no caricature. It shows real moments of Punjabi life in Surrey, told with dignity:
+
+- **Scenes:**
+  1. A Sikh grandfather listens to the radio with his morning chai.
+  2. A young woman listens on her drive to work.
+  3. A shopkeeper opens his shop.
+  4. Three generations eat dinner together.
+  5. A grandmother hears her name on the live show and puts her hand on her heart.
+- **Narrator:** a warm voice (ElevenLabs eleven_v3, "Jaskirat"), one line per scene, with pauses. The lines are `public/home/vo1-6.mp3`.
+- **Music:** an instrumental score (`public/home/music.mp3`) with sarangi, tumbi, strings and a soft dhol at the end.
+- **Visual style:** cinematic letterbox, film grain and slow dissolves. Each line is lettered in gold Gurmukhi with a phulkari diamond ornament and a quiet English translation. The end card shows the glowing record, INDI RADIO, "ਘਰ ਦੀ ਆਵਾਜ਼" and indiradio.ca.
+
+The clips come from ElevenLabs (Kling 2.5). Shot 1 is a still (gpt-image-2) with a Ken Burns drift. Any `shots[].file` ending in .jpg/.png is treated as a still.
+
+Build it with `../home/build.sh`. Remotion renders the pictures, and ffmpeg then places each voice line (`VO_AT`), lightly ducks the music and masters to -14 LUFS. The music is extended by two bars (a beat-matched splice) so its final chord lands on the end card.
+
 ## Run
 
 ```bash

@@ -5,6 +5,7 @@ import { defaultPromoProps, promoSchema, type PromoProps } from "./schema";
 import { defaultPromoV2Props, PromoV2 } from "./v2/PromoV2";
 import { defaultFilmProps, Film, FILM_DURATION, filmSchema } from "./v3/Film";
 import { defaultViralProps, Viral, VIRAL, viralSchema } from "./v4/Viral";
+import { defaultHomeProps, Home, homeDuration, homeSchema, type HomeProps } from "./v5/Home";
 import { FPS } from "./theme";
 
 /**
@@ -63,6 +64,17 @@ export const RemotionRoot: React.FC = () => (
     schema={viralSchema}
     defaultProps={defaultViralProps}
     durationInFrames={VIRAL.total}
+    fps={FPS}
+    width={1080}
+    height={1920}
+  />
+  <Composition
+    id="IndiRadioHome"
+    component={Home}
+    schema={homeSchema}
+    defaultProps={defaultHomeProps}
+    durationInFrames={homeDuration(defaultHomeProps)}
+    calculateMetadata={({ props }: { props: HomeProps }) => ({ durationInFrames: homeDuration(props) })}
     fps={FPS}
     width={1080}
     height={1920}
