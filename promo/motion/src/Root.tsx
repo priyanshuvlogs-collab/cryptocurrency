@@ -4,6 +4,7 @@ import { Promo, T, totalFrames } from "./Promo";
 import { defaultPromoProps, promoSchema, type PromoProps } from "./schema";
 import { defaultPromoV2Props, PromoV2 } from "./v2/PromoV2";
 import { defaultFilmProps, Film, FILM_DURATION, filmSchema } from "./v3/Film";
+import { defaultViralProps, Viral, VIRAL, viralSchema } from "./v4/Viral";
 import { FPS } from "./theme";
 
 /**
@@ -52,6 +53,16 @@ export const RemotionRoot: React.FC = () => (
     schema={filmSchema}
     defaultProps={defaultFilmProps}
     durationInFrames={FILM_DURATION}
+    fps={FPS}
+    width={1080}
+    height={1920}
+  />
+  <Composition
+    id="IndiRadioViral"
+    component={Viral}
+    schema={viralSchema}
+    defaultProps={defaultViralProps}
+    durationInFrames={VIRAL.total}
     fps={FPS}
     width={1080}
     height={1920}
