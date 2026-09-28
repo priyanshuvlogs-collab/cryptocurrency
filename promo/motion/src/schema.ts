@@ -38,24 +38,25 @@ export const promoSchema = z.object({
     lines: z.array(z.string()).length(7),
   }),
   audio: z.object({
-    voiceover: z.string().nullable(), // file in public/, e.g. "voiceover.mp3"
-    voiceoverStartSeconds: z.number().min(0),
-    music: z.string().nullable(), // licensed track in public/
-    musicVolume: z.number().min(0).max(1), // under the voice
-    musicVolumeNoVoice: z.number().min(0).max(1), // before and after the voice
+    /** One voice clip per scene (files in public/, or null for silence), in scene order. */
+    voiceLines: z.array(z.string().nullable()).length(7),
+    /** Frames after a scene's transition before its line starts. */
+    voiceLeadFrames: z.number().int().min(0),
+    music: z.string().nullable(), // background track in public/
+    musicVolume: z.number().min(0).max(1), // while the voice speaks
+    musicVolumeNoVoice: z.number().min(0).max(1), // in the gaps between lines
   }),
   /**
-   * Length of each scene in frames (30 fps): hook, logo, home, listen, clocks,
-   * advertise, end. Neighbouring scenes overlap by 16 frames for the transition.
-   * Defaults are timed to voiceover take 1 so each scene changes with the voice.
+   * Minimum length of each scene in frames (30 fps): hook, logo, home, listen,
+   * clocks, advertise, end. calculateMetadata stretches a scene when its voice
+   * line needs more room. Neighbouring scenes overlap by 16 frames.
    */
   sceneFrames: z.array(z.number().int().min(40)).length(7),
   /** Frame (inside the listen scene) where the finger taps play: on the word "ਟੈਪ". */
   listenTapFrame: z.number().int().min(10),
-  /** Voiceover length in seconds, set automatically by calculateMetadata (used to duck the music). */
-  voiceoverSeconds: z.number().min(0),
-  /** Set automatically by calculateMetadata so the end card holds until the voiceover ends. */
-  extraEndFrames: z.number().int().min(0),
+  /** Set automatically by calculateMetadata: final scene lengths and each voice line's length. */
+  resolvedSceneFrames: z.array(z.number().int()).length(7),
+  voiceLineSeconds: z.array(z.number().min(0)).length(7),
 });
 
 export type PromoProps = z.infer<typeof promoSchema>;
@@ -86,22 +87,29 @@ export const defaultPromoProps: PromoProps = {
   },
   subtitles: {
     show: true,
-    // Matches the voiceover script in ../config.motion.json. Hook, logo and end card
+    // Matches the voice lines. Hook, logo and end card
     // already carry their words on screen, so they stay empty.
     lines: [
       "",
       "",
-      "ਸਰੀ ਤੋਂ ਲਾਈਵ ਪੰਜਾਬੀ ਰੇਡੀਓ: ਗੱਲਬਾਤ, ਸੰਗੀਤ ਅਤੇ ਭਾਈਚਾਰਾ, ਸਾਰਾ ਦਿਨ।",
-      "ਬੱਸ ਇੱਕ ਟੈਪ, ਤੇ ਤੁਸੀਂ ਲਾਈਵ ਸੁਣ ਰਹੇ ਹੋ।",
-      "ਦੁਨੀਆ ਵਿੱਚ ਕਿਤੇ ਵੀ ਹੋਵੋ, ਹਰ ਸ਼ੋਅ ਦਾ ਸਮਾਂ ਤੁਹਾਡੇ ਸ਼ਹਿਰ ਮੁਤਾਬਕ।",
-      "ਤੇ ਜੇ ਤੁਹਾਡਾ ਕੋਈ ਕਾਰੋਬਾਰ ਹੈ, ਤਾਂ ਪ੍ਰਮੋਟ ਕਰਵਾਓ ਆਪਣਾ ਬਿਜ਼ਨਸ ਇੰਡੀ ਰੇਡੀਓ ’ਤੇ।",
+      "ਸਰੀ ਤੋਂ, ਲਾਈਵ ਪੰਜਾਬੀ ਰੇਡੀਓ… ਗੱਲਬਾਤ, ਸੰਗੀਤ, ਤੇ ਭਾਈਚਾਰਾ — ਸਾਰਾ ਦਿਨ।",
+      "ਬੱਸ ਇੱਕ ਟੈਪ… ਤੇ ਤੁਸੀਂ ਲਾਈਵ ਸੁਣ ਰਹੇ ਹੋ!",
+      "ਦੁਨੀਆ ਵਿੱਚ ਕਿਤੇ ਵੀ ਹੋਵੋ… ਹਰ ਸ਼ੋਅ ਦਾ ਸਮਾਂ, ਤੁਹਾਡੇ ਆਪਣੇ ਸ਼ਹਿਰ ਮੁਤਾਬਕ।",
+      "ਤੇ ਜੇ ਤੁਹਾਡਾ ਕੋਈ ਕਾਰੋਬਾਰ ਹੈ… ਤਾਂ ਪ੍ਰਮੋਟ ਕਰਵਾਓ ਆਪਣਾ ਬਿਜ਼ਨਸ — ਇੰਡੀ ਰੇਡੀਓ ’ਤੇ!",
       "",
     ],
   },
-  // Voiceover: ElevenLabs, "Pind Waali Desi Punjabi Voice", eleven_multilingual_v2 (takes 1–3 in public/voiceover).
-  audio: { voiceover: "voiceover/take1.mp3", voiceoverStartSeconds: 0.4, music: null, musicVolume: 0.14, musicVolumeNoVoice: 0.4 },
-  sceneFrames: [88, 67, 193, 181, 184, 220, 165],
-  listenTapFrame: 34,
-  voiceoverSeconds: 0,
-  extraEndFrames: 0,
+  // Voice: ElevenLabs eleven_v3, "Pind Waali Desi Punjabi Voice", one clip per scene (public/voice).
+  // Music: ElevenLabs eleven_music_v2, instrumental Punjabi bhangra (public/music).
+  audio: {
+    voiceLines: [1, 2, 3, 4, 5, 6, 7].map((n) => `voice/line${n}.mp3`),
+    voiceLeadFrames: 4,
+    music: "music/bhangra1.mp3",
+    musicVolume: 0.16,
+    musicVolumeNoVoice: 0.34,
+  },
+  sceneFrames: [90, 70, 150, 120, 130, 180, 150],
+  listenTapFrame: 40,
+  resolvedSceneFrames: [90, 70, 150, 120, 130, 180, 150],
+  voiceLineSeconds: [0, 0, 0, 0, 0, 0, 0],
 };

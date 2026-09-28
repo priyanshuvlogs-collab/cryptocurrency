@@ -29,23 +29,20 @@ If Remotion can't download its own browser (firewall), point it at Chrome: `REMO
 
 Every headline, callout, subtitle and the phone number live in `src/schema.ts` (`defaultPromoProps`). In `npm run studio`, open the **Props** panel on the right to edit them live, then save or render. Punjabi subtitles are burned in for muted autoplay (`subtitles.show`, one line per scene).
 
-## Voiceover and music
+## Voice and music
 
-The video ships with a Punjabi voiceover made with ElevenLabs (voice "Pind Waali Desi Punjabi Voice", model `eleven_multilingual_v2`): three takes in `public/voiceover/`, loudness-normalised to about -16 LUFS. Take 1 is used and the scene lengths (`sceneFrames`) are timed to it; switch takes with `audio.voiceover` in the Props panel.
+Both made with the ElevenLabs connector:
 
-To make a new one:
+- **Voice:** `eleven_v3`, voice "Pind Waali Desi Punjabi Voice", one clip per scene in `public/voice/line1–7.mp3`. Each line was written with pauses (`…`, `—`) and a delivery tag (`[warmly]`, `[excited]`, `[cheerfully]`, `[confidently]`), then loudness-normalised. Each line starts right after its scene's transition, and `calculateMetadata` stretches a scene when its line needs more room, so there is always a breath between lines.
+- **Music:** `eleven_music_v2` with `instrumental: true`, a Punjabi bhangra bed (dhol, tumbi, algoza, chimta), two takes in `public/music/`. It ducks under each line and lifts in the gaps.
 
-1. Voiceover: from `promo/`, run `python main.py --config config.motion.json --tts-only`. ElevenLabs (`eleven_multilingual_v2`) writes `motion/public/voiceover.mp3`.
-2. Set `audio.voiceover` to `"voiceover.mp3"` (Props panel or `src/schema.ts`). For music, put a licensed track in `public/music.mp3` and set `audio.music`.
-3. `npm run render`. The video lengthens itself so the end card holds until the voiceover ends (`calculateMetadata` in `src/Root.tsx`).
-
-The voiceover script (in `../config.motion.json`) and the subtitles follow the scenes: hook → live radio → one tap → time zones → promote your business → indiradio.ca.
+To change a line, generate a new clip, save it over `public/voice/lineN.mp3` and render again. The scene timing adjusts on its own. Switch music with `audio.music` in the Props panel.
 
 ## Remotion practices used
 
 - Every animation is driven by `useCurrentFrame()` / `spring()`; no CSS animations or randomness, so renders are identical every time.
 - Images through `<Img>` + `staticFile()` (the render waits for them); fonts bundled and loaded with `@remotion/fonts`.
-- Typed, editable props with a zod schema; `calculateMetadata` for audio-driven length; `TransitionSeries` for scene transitions.
+- Typed, editable props with a zod schema; `calculateMetadata` sizes each scene to its voice line; `TransitionSeries` for scene transitions; music ducked with a smooth volume curve.
 
 ## Update the screenshots
 

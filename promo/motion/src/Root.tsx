@@ -1,21 +1,23 @@
 import { Composition, staticFile, type CalculateMetadataFunction } from "remotion";
 import { getAudioDurationInSeconds } from "@remotion/media-utils";
-import { Promo, totalFrames } from "./Promo";
+import { Promo, T, totalFrames } from "./Promo";
 import { defaultPromoProps, promoSchema, type PromoProps } from "./schema";
 import { FPS } from "./theme";
 
-/** Hold the end card until the voiceover has finished (plus one second). */
+/**
+ * Reads each voice line's length and stretches its scene so the line fits,
+ * with breathing room after it. The end card holds a little longer.
+ */
 const calculateMetadata: CalculateMetadataFunction<PromoProps> = async ({ props }) => {
-  const base = totalFrames(props.sceneFrames);
-  let extraEndFrames = 0;
-  let voiceoverSeconds = 0;
-  if (props.audio.voiceover) {
-    const seconds = await getAudioDurationInSeconds(staticFile(props.audio.voiceover));
-    voiceoverSeconds = seconds;
-    const needed = Math.ceil((props.audio.voiceoverStartSeconds + seconds + 1) * FPS);
-    extraEndFrames = Math.max(0, needed - base);
-  }
-  return { durationInFrames: base + extraEndFrames, props: { ...props, extraEndFrames, voiceoverSeconds } };
+  const { voiceLines, voiceLeadFrames } = props.audio;
+  const voiceLineSeconds = await Promise.all(voiceLines.map((f) => (f ? getAudioDurationInSeconds(staticFile(f)) : Promise.resolve(0))));
+  const resolvedSceneFrames = props.sceneFrames.map((min, i) => {
+    if (!voiceLineSeconds[i]) return min;
+    const lead = (i === 0 ? 0 : T) + voiceLeadFrames;
+    const tail = i === voiceLines.length - 1 ? 45 : 14; // pause after the line
+    return Math.max(min, lead + Math.ceil(voiceLineSeconds[i] * FPS) + tail + (i === voiceLines.length - 1 ? 0 : T));
+  });
+  return { durationInFrames: totalFrames(resolvedSceneFrames), props: { ...props, resolvedSceneFrames, voiceLineSeconds } };
 };
 
 export const RemotionRoot: React.FC = () => (

@@ -65,9 +65,16 @@ const Subtitles: React.FC<{ lines: string[]; durations: number[] }> = ({ lines, 
 };
 
 export const Promo: React.FC<PromoProps> = (props) => {
-  const { audio, subtitles, extraEndFrames, sceneFrames } = props;
-  const durations = sceneFrames.map((d, i) => (i === sceneFrames.length - 1 ? d + extraEndFrames : d));
+  const { audio, subtitles } = props;
+  const durations = props.resolvedSceneFrames;
   const total = totalFrames(durations);
+  const starts = startsOf(durations);
+  // Where each voice line plays: after the scene's incoming transition.
+  const lines = audio.voiceLines.map((file, i) => ({
+    file,
+    from: starts[i] + (i === 0 ? 0 : T) + audio.voiceLeadFrames,
+    frames: Math.ceil(props.voiceLineSeconds[i] * FPS),
+  }));
   const scenes = [
     <Hook key="hook" p={props.hook} />,
     <LogoReveal key="logo" p={props.logo} />,
@@ -103,24 +110,25 @@ export const Promo: React.FC<PromoProps> = (props) => {
         <Audio
           src={staticFile(audio.music)}
           volume={(f) => {
-            // Duck the music while the voice speaks, then fade out at the very end.
-            const vStart = audio.voiceover ? audio.voiceoverStartSeconds * FPS : total;
-            const vEnd = vStart + props.voiceoverSeconds * FPS;
-            const level = audio.voiceover
-              ? interpolate(f, [vStart - 10, vStart, vEnd, vEnd + 12], [audio.musicVolumeNoVoice, audio.musicVolume, audio.musicVolume, audio.musicVolumeNoVoice], {
-                  extrapolateLeft: "clamp",
-                  extrapolateRight: "clamp",
-                })
-              : audio.musicVolumeNoVoice;
-            return level * interpolate(f, [0, 12, total - 30, total], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+            // Duck the music while any line is spoken, lift it in the gaps, fade at the end.
+            const duck = Math.max(
+              0,
+              ...lines.map((l) =>
+                l.file ? interpolate(f, [l.from - 8, l.from, l.from + l.frames, l.from + l.frames + 10], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }) : 0,
+              ),
+            );
+            const level = audio.musicVolumeNoVoice + (audio.musicVolume - audio.musicVolumeNoVoice) * duck;
+            return level * interpolate(f, [0, 10, total - 30, total], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
           }}
         />
       ) : null}
-      {audio.voiceover ? (
-        <Sequence from={Math.round(audio.voiceoverStartSeconds * FPS)}>
-          <Audio src={staticFile(audio.voiceover)} />
-        </Sequence>
-      ) : null}
+      {lines.map((l, i) =>
+        l.file ? (
+          <Sequence key={`v${i}`} from={l.from}>
+            <Audio src={staticFile(l.file)} />
+          </Sequence>
+        ) : null,
+      )}
     </AbsoluteFill>
   );
 };
