@@ -14,6 +14,22 @@ A 32-second vertical (1080×1920) SaaS-style promo for Reels, TikTok and Shorts,
 
 Brand colours, fonts (bundled in `public/fonts`, OFL) and screenshots come from the real website.
 
+## V2: heavier motion graphics (`IndiRadioPromoV2`)
+
+Same voice, music and text props, with more motion. Render it with `npm run render:v2`.
+
+| Scene | Motion |
+| --- | --- |
+| Hook | Words slam in on the voice with an RGB split and a shake, radio-wave rings pulse on every dhol beat, light rays |
+| Logo | Record flips in 3D, particle burst, letters flip up one by one |
+| Website | Three real phone screenshots in a 3D coverflow, two diagonal ticker bands |
+| One tap | Play button morphs to LIVE, a radial visualizer driven by the actual voice audio |
+| Time zones | A rotating 3D globe with real continents; arcs fly from Surrey to the USA, UK, Dubai, India and Australia |
+| Advertise | Package cards flip in 3D, a tap on the most popular one, confetti, CTA pills |
+| End | A phulkari diamond draws itself, the URL types out, CTA buttons |
+
+Transitions include a custom phulkari diamond wipe (`src/v2/fx.tsx`). Beat-synced motion uses `beatPeriodFrames` / `beatOffsetFrames` (100 BPM, measured from `bhangra1.mp3`).
+
 ## Run
 
 ```bash

@@ -2,6 +2,7 @@ import { Composition, staticFile, type CalculateMetadataFunction } from "remotio
 import { getAudioDurationInSeconds } from "@remotion/media-utils";
 import { Promo, T, totalFrames } from "./Promo";
 import { defaultPromoProps, promoSchema, type PromoProps } from "./schema";
+import { defaultPromoV2Props, PromoV2 } from "./v2/PromoV2";
 import { FPS } from "./theme";
 
 /**
@@ -21,6 +22,7 @@ const calculateMetadata: CalculateMetadataFunction<PromoProps> = async ({ props 
 };
 
 export const RemotionRoot: React.FC = () => (
+  <>
   <Composition
     id="IndiRadioPromo"
     component={Promo}
@@ -32,4 +34,16 @@ export const RemotionRoot: React.FC = () => (
     width={1080}
     height={1920}
   />
+  <Composition
+    id="IndiRadioPromoV2"
+    component={PromoV2}
+    schema={promoSchema}
+    defaultProps={defaultPromoV2Props}
+    calculateMetadata={calculateMetadata}
+    durationInFrames={totalFrames(defaultPromoV2Props.sceneFrames)}
+    fps={FPS}
+    width={1080}
+    height={1920}
+  />
+  </>
 );

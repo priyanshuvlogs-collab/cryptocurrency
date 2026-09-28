@@ -2,7 +2,13 @@ import { interpolate, spring, useCurrentFrame, useVideoConfig, Easing } from "re
 import { C } from "../theme";
 
 /** A finger-tap cursor that glides to a point and taps at `tapAt`. */
-export const TapCursor: React.FC<{ from: [number, number]; to: [number, number]; start: number; tapAt: number }> = ({ from, to, start, tapAt }) => {
+export const TapCursor: React.FC<{ from: [number, number]; to: [number, number]; start: number; tapAt: number; hideAfter?: number }> = ({
+  from,
+  to,
+  start,
+  tapAt,
+  hideAfter,
+}) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const p = interpolate(frame, [start, tapAt - 4], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.inOut(Easing.cubic) });
@@ -10,7 +16,10 @@ export const TapCursor: React.FC<{ from: [number, number]; to: [number, number];
   const y = from[1] + (to[1] - from[1]) * p;
   const press = spring({ frame: frame - tapAt, fps, config: { damping: 10, stiffness: 300 } });
   const ring = interpolate(frame, [tapAt, tapAt + 18], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
-  const visible = interpolate(frame, [start, start + 6], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const fadeIn = interpolate(frame, [start, start + 6], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  // Optionally fade the finger away a few frames after the tap.
+  const fadeOut = hideAfter === undefined ? 1 : interpolate(frame, [tapAt + hideAfter, tapAt + hideAfter + 8], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const visible = fadeIn * fadeOut;
   return (
     <div style={{ position: "absolute", left: x, top: y, opacity: visible, pointerEvents: "none" }}>
       <div

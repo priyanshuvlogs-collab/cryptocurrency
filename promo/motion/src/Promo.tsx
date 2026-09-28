@@ -12,6 +12,7 @@ import { ListenLive } from "./scenes/ListenLive";
 import { LogoReveal } from "./scenes/LogoReveal";
 import { WorldClocks } from "./scenes/WorldClocks";
 import { C, FONT, FPS } from "./theme";
+import { BeatContext } from "./v2/fx";
 
 export const T = 16; // transition length in frames
 
@@ -29,7 +30,7 @@ const TRANSITIONS: TransitionPresentation<any>[] = [
 export const totalFrames = (durations: number[]) => durations.reduce((a, b) => a + b, 0) - T * (durations.length - 1);
 
 /** Frame where each scene starts (transitions overlap neighbouring scenes). */
-const startsOf = (durations: number[]) => durations.map((_, i) => durations.slice(0, i).reduce((a, b) => a + b, 0) - T * i);
+export const startsOf = (durations: number[]) => durations.map((_, i) => durations.slice(0, i).reduce((a, b) => a + b, 0) - T * i);
 
 /** Burned-in subtitle for muted autoplay: one line per scene, faded in and out. */
 const Subtitles: React.FC<{ lines: string[]; durations: number[] }> = ({ lines, durations }) => {
@@ -64,40 +65,45 @@ const Subtitles: React.FC<{ lines: string[]; durations: number[] }> = ({ lines, 
   );
 };
 
-export const Promo: React.FC<PromoProps> = (props) => {
+/** Where each voice line plays: after its scene's incoming transition. */
+export const voiceLinePlacements = (props: PromoProps) => {
+  const starts = startsOf(props.resolvedSceneFrames);
+  return props.audio.voiceLines.map((file, i) => ({
+    file,
+    from: starts[i] + (i === 0 ? 0 : T) + props.audio.voiceLeadFrames,
+    frames: Math.ceil(props.voiceLineSeconds[i] * FPS),
+  }));
+};
+
+/**
+ * Shared timeline for both promo versions: scenes with transitions, the beat
+ * grid, burned-in subtitles, voice lines and ducked music.
+ */
+export const Timeline: React.FC<{
+  props: PromoProps;
+  scenes: React.ReactNode[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  transitions: TransitionPresentation<any>[];
+}> = ({ props, scenes, transitions }) => {
   const { audio, subtitles } = props;
   const durations = props.resolvedSceneFrames;
   const total = totalFrames(durations);
   const starts = startsOf(durations);
-  // Where each voice line plays: after the scene's incoming transition.
-  const lines = audio.voiceLines.map((file, i) => ({
-    file,
-    from: starts[i] + (i === 0 ? 0 : T) + audio.voiceLeadFrames,
-    frames: Math.ceil(props.voiceLineSeconds[i] * FPS),
-  }));
-  const scenes = [
-    <Hook key="hook" p={props.hook} />,
-    <LogoReveal key="logo" p={props.logo} />,
-    <HomeShowcase key="home" p={props.home} />,
-    <ListenLive key="listen" p={props.listen} tapAt={props.listenTapFrame} />,
-    <WorldClocks key="clocks" p={props.clocks} />,
-    <Advertise key="advertise" p={props.advertise} />,
-    <EndCard key="end" p={props.end} />,
-  ];
+  const lines = voiceLinePlacements(props);
   return (
     <AbsoluteFill style={{ backgroundColor: C.ink }}>
       <TransitionSeries>
         {scenes.flatMap((scene, i) => {
           const items = [
             <TransitionSeries.Sequence key={`s${i}`} durationInFrames={durations[i]}>
-              {scene}
+              <BeatContext.Provider value={{ period: props.beatPeriodFrames, offset: props.beatOffsetFrames, sceneStart: starts[i] }}>{scene}</BeatContext.Provider>
             </TransitionSeries.Sequence>,
           ];
           if (i < scenes.length - 1) {
             items.push(
               <TransitionSeries.Transition
                 key={`t${i}`}
-                presentation={TRANSITIONS[i]}
+                presentation={transitions[i]}
                 timing={i % 2 ? springTiming({ config: { damping: 200 }, durationInFrames: T }) : linearTiming({ durationInFrames: T })}
               />,
             );
@@ -132,3 +138,19 @@ export const Promo: React.FC<PromoProps> = (props) => {
     </AbsoluteFill>
   );
 };
+
+export const Promo: React.FC<PromoProps> = (props) => (
+  <Timeline
+    props={props}
+    transitions={TRANSITIONS}
+    scenes={[
+      <Hook key="hook" p={props.hook} />,
+      <LogoReveal key="logo" p={props.logo} />,
+      <HomeShowcase key="home" p={props.home} />,
+      <ListenLive key="listen" p={props.listen} tapAt={props.listenTapFrame} />,
+      <WorldClocks key="clocks" p={props.clocks} />,
+      <Advertise key="advertise" p={props.advertise} />,
+      <EndCard key="end" p={props.end} />,
+    ]}
+  />
+);

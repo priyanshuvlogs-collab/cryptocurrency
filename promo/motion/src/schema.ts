@@ -54,6 +54,9 @@ export const promoSchema = z.object({
   sceneFrames: z.array(z.number().int().min(40)).length(7),
   /** Frame (inside the listen scene) where the finger taps play: on the word "ਟੈਪ". */
   listenTapFrame: z.number().int().min(10),
+  /** Music beat grid for beat-synced motion (V2): frames per beat and the first beat's frame. */
+  beatPeriodFrames: z.number().min(4),
+  beatOffsetFrames: z.number().min(0),
   /** Set automatically by calculateMetadata: final scene lengths and each voice line's length. */
   resolvedSceneFrames: z.array(z.number().int()).length(7),
   voiceLineSeconds: z.array(z.number().min(0)).length(7),
@@ -110,6 +113,8 @@ export const defaultPromoProps: PromoProps = {
   },
   sceneFrames: [90, 70, 150, 120, 130, 180, 150],
   listenTapFrame: 40,
+  beatPeriodFrames: 18, // 100 BPM, measured from bhangra1.mp3
+  beatOffsetFrames: 8.25, // first dhol hit of bhangra1.mp3
   resolvedSceneFrames: [90, 70, 150, 120, 130, 180, 150],
   voiceLineSeconds: [0, 0, 0, 0, 0, 0, 0],
 };
