@@ -1,0 +1,25 @@
+{
+  "elevenlabs": {
+    "voice_id": "pNInz6obpgDQGcFmaJgB",
+    "model_id": "eleven_multilingual_v2",
+    "output_format": "mp3_44100_128",
+    "text": "ਤੁਹਾਡਾ ਆਪਣਾ ਰੇਡੀਓ, ਇੰਡੀ ਰੇਡੀਓ। ਹੁਣੇ ਵਿਜ਼ਿਟ ਕਰੋ indiradio.ca ਅਤੇ ਪ੍ਰਮੋਟ ਕਰਵਾਓ ਆਪਣਾ ਬਿਜ਼ਨਸ।"
+  },
+  "assets": {
+    "background": "assets/bg.mp4",
+    "logo": "../public/logo.png",
+    "font": "assets/fonts/DejaVuSans-Bold.ttf"
+  },
+  "output": {
+    "voice": "build/voice.mp3",
+    "video": "build/indi-radio-promo.mp4",
+    "width": 1080,
+    "height": 1920,
+    "fps": 30
+  },
+  "captions": [
+    { "start": 0.0, "end": 2.5, "lines": ["Tuhadda Apna Radio", "Indi Radio"], "box": "black@0.5", "color": "white" },
+    { "start": 2.5, "end": 5.0, "lines": ["Visit: www.indiradio.ca"], "box": "0x1d4ed8@0.85", "color": "white" },
+    { "start": 5.0, "end": null, "lines": ["Promote Your Business"], "box": "0x15803d@0.9", "color": "white" }
+  ]
+}
