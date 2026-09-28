@@ -30,6 +30,18 @@ Same voice, music and text props, with more motion. Render it with `npm run rend
 
 Transitions include a custom phulkari diamond wipe (`src/v2/fx.tsx`). Beat-synced motion uses `beatPeriodFrames` / `beatOffsetFrames` (100 BPM, measured from `bhangra1.mp3`).
 
+## Brand film: "ਘਰ ਦੀ ਆਵਾਜ਼ / The Sound of Home" (`IndiRadioBrandFilm`)
+
+A 32 s brand film in the style of the big drinks ads: no UI, just moments from Punjabi life, one signature device (the marigold **Sound Ribbon**), bold words cut on the dhol beat, and a tagline. Render it with `npm run render:film`.
+
+- **Cold open:** the ribbon draws itself on a black screen. "EVERY DAY. EVERYWHERE."
+- **Six moments, 4 beats each:** ਸਵੇਰ ਦੀ ਚਾਹ, ਕੰਮ ਦਾ ਰਾਹ, ਰਸੋਈ ਦੀਆਂ ਗੱਲਾਂ, ਵਿਆਹ ਦਾ ਢੋਲ, ਦੇਰ ਰਾਤ ਦੀ ਕਾਲ, ਸੱਤ ਸਮੁੰਦਰ ਪਾਰ, each with a whip-pan cut on the beat.
+- **Energy:** LIVE. / LOUD. / PUNJABI. / ਸਾਡਾ. on colour-flipping frames.
+- **Payoff:** the ribbon spirals into the record, and the voice says "ਘਰ ਦੀ ਆਵਾਜ਼… ਇੰਡੀ ਰੇਡੀਓ!"
+- **End:** INDI RADIO, and indiradio.ca is typed out.
+
+**Photos:** each moment has a `photo` prop (Props panel or `src/v3/Film.tsx`). Put a vertical photo in `public/film/` (e.g. `film/chai.jpg`) and set it. The moment then plays it full-bleed with a slow Ken Burns push and the same words and ribbon. Without a photo it uses the animated line illustration.
+
 ## Run
 
 ```bash
