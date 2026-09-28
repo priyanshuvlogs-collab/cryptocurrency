@@ -6,7 +6,17 @@ import { defaultPromoV2Props, PromoV2 } from "./v2/PromoV2";
 import { defaultFilmProps, Film, FILM_DURATION, filmSchema } from "./v3/Film";
 import { defaultViralProps, Viral, VIRAL, viralSchema } from "./v4/Viral";
 import { defaultHomeProps, Home, homeDuration, homeSchema, type HomeProps } from "./v5/Home";
+import { Short, shortLayout, shortSchema, type ShortProps } from "./v6/Short";
+import { FILM_DEFS, filmProps } from "./v6/films";
 import { FPS } from "./theme";
+
+/** Measures each narrator line so the short's beats fit its voice (3 s if a line is missing). */
+const shortMetadata: CalculateMetadataFunction<ShortProps> = async ({ props }) => {
+  const files = [...props.beats.map((b) => b.voice), props.end.voice];
+  const voiceSeconds = await Promise.all(files.map((f) => getAudioDurationInSeconds(staticFile(f)).catch(() => 3)));
+  const next = { ...props, voiceSeconds };
+  return { props: next, durationInFrames: shortLayout(next).total };
+};
 
 /**
  * Reads each voice line's length and stretches its scene so the line fits,
@@ -79,5 +89,19 @@ export const RemotionRoot: React.FC = () => (
     width={1080}
     height={1920}
   />
+  {FILM_DEFS.map((d) => (
+    <Composition
+      key={d.id}
+      id={`Short-${d.id}`}
+      component={Short}
+      schema={shortSchema}
+      defaultProps={filmProps(d)}
+      calculateMetadata={shortMetadata}
+      durationInFrames={600}
+      fps={FPS}
+      width={1080}
+      height={1920}
+    />
+  ))}
   </>
 );
