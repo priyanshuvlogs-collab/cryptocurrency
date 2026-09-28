@@ -41,7 +41,8 @@ export const promoSchema = z.object({
     voiceover: z.string().nullable(), // file in public/, e.g. "voiceover.mp3"
     voiceoverStartSeconds: z.number().min(0),
     music: z.string().nullable(), // licensed track in public/
-    musicVolume: z.number().min(0).max(1),
+    musicVolume: z.number().min(0).max(1), // under the voice
+    musicVolumeNoVoice: z.number().min(0).max(1), // before and after the voice
   }),
   /**
    * Length of each scene in frames (30 fps): hook, logo, home, listen, clocks,
@@ -51,6 +52,8 @@ export const promoSchema = z.object({
   sceneFrames: z.array(z.number().int().min(40)).length(7),
   /** Frame (inside the listen scene) where the finger taps play: on the word "ਟੈਪ". */
   listenTapFrame: z.number().int().min(10),
+  /** Voiceover length in seconds, set automatically by calculateMetadata (used to duck the music). */
+  voiceoverSeconds: z.number().min(0),
   /** Set automatically by calculateMetadata so the end card holds until the voiceover ends. */
   extraEndFrames: z.number().int().min(0),
 });
@@ -96,8 +99,9 @@ export const defaultPromoProps: PromoProps = {
     ],
   },
   // Voiceover: ElevenLabs, "Pind Waali Desi Punjabi Voice", eleven_multilingual_v2 (takes 1–3 in public/voiceover).
-  audio: { voiceover: "voiceover/take1.mp3", voiceoverStartSeconds: 0.4, music: null, musicVolume: 0.18 },
+  audio: { voiceover: "voiceover/take1.mp3", voiceoverStartSeconds: 0.4, music: null, musicVolume: 0.14, musicVolumeNoVoice: 0.4 },
   sceneFrames: [88, 67, 193, 181, 184, 220, 165],
   listenTapFrame: 34,
+  voiceoverSeconds: 0,
   extraEndFrames: 0,
 };

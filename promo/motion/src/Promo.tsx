@@ -102,7 +102,18 @@ export const Promo: React.FC<PromoProps> = (props) => {
       {audio.music ? (
         <Audio
           src={staticFile(audio.music)}
-          volume={(f) => audio.musicVolume * interpolate(f, [0, 20, total - 40, total], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })}
+          volume={(f) => {
+            // Duck the music while the voice speaks, then fade out at the very end.
+            const vStart = audio.voiceover ? audio.voiceoverStartSeconds * FPS : total;
+            const vEnd = vStart + props.voiceoverSeconds * FPS;
+            const level = audio.voiceover
+              ? interpolate(f, [vStart - 10, vStart, vEnd, vEnd + 12], [audio.musicVolumeNoVoice, audio.musicVolume, audio.musicVolume, audio.musicVolumeNoVoice], {
+                  extrapolateLeft: "clamp",
+                  extrapolateRight: "clamp",
+                })
+              : audio.musicVolumeNoVoice;
+            return level * interpolate(f, [0, 12, total - 30, total], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+          }}
         />
       ) : null}
       {audio.voiceover ? (

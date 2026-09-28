@@ -8,12 +8,14 @@ import { FPS } from "./theme";
 const calculateMetadata: CalculateMetadataFunction<PromoProps> = async ({ props }) => {
   const base = totalFrames(props.sceneFrames);
   let extraEndFrames = 0;
+  let voiceoverSeconds = 0;
   if (props.audio.voiceover) {
     const seconds = await getAudioDurationInSeconds(staticFile(props.audio.voiceover));
+    voiceoverSeconds = seconds;
     const needed = Math.ceil((props.audio.voiceoverStartSeconds + seconds + 1) * FPS);
     extraEndFrames = Math.max(0, needed - base);
   }
-  return { durationInFrames: base + extraEndFrames, props: { ...props, extraEndFrames } };
+  return { durationInFrames: base + extraEndFrames, props: { ...props, extraEndFrames, voiceoverSeconds } };
 };
 
 export const RemotionRoot: React.FC = () => (
