@@ -31,6 +31,10 @@ Every headline, callout, subtitle and the phone number live in `src/schema.ts` (
 
 ## Voiceover and music
 
+The video ships with a Punjabi voiceover made with ElevenLabs (voice "Pind Waali Desi Punjabi Voice", model `eleven_multilingual_v2`): three takes in `public/voiceover/`, loudness-normalised to about -16 LUFS. Take 1 is used and the scene lengths (`sceneFrames`) are timed to it; switch takes with `audio.voiceover` in the Props panel.
+
+To make a new one:
+
 1. Voiceover: from `promo/`, run `python main.py --config config.motion.json --tts-only`. ElevenLabs (`eleven_multilingual_v2`) writes `motion/public/voiceover.mp3`.
 2. Set `audio.voiceover` to `"voiceover.mp3"` (Props panel or `src/schema.ts`). For music, put a licensed track in `public/music.mp3` and set `audio.music`.
 3. `npm run render`. The video lengthens itself so the end card holds until the voiceover ends (`calculateMetadata` in `src/Root.tsx`).

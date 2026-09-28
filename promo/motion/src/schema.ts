@@ -43,6 +43,14 @@ export const promoSchema = z.object({
     music: z.string().nullable(), // licensed track in public/
     musicVolume: z.number().min(0).max(1),
   }),
+  /**
+   * Length of each scene in frames (30 fps): hook, logo, home, listen, clocks,
+   * advertise, end. Neighbouring scenes overlap by 16 frames for the transition.
+   * Defaults are timed to voiceover take 1 so each scene changes with the voice.
+   */
+  sceneFrames: z.array(z.number().int().min(40)).length(7),
+  /** Frame (inside the listen scene) where the finger taps play: on the word "ਟੈਪ". */
+  listenTapFrame: z.number().int().min(10),
   /** Set automatically by calculateMetadata so the end card holds until the voiceover ends. */
   extraEndFrames: z.number().int().min(0),
 });
@@ -87,6 +95,9 @@ export const defaultPromoProps: PromoProps = {
       "",
     ],
   },
-  audio: { voiceover: null, voiceoverStartSeconds: 0.5, music: null, musicVolume: 0.18 },
+  // Voiceover: ElevenLabs, "Pind Waali Desi Punjabi Voice", eleven_multilingual_v2 (takes 1–3 in public/voiceover).
+  audio: { voiceover: "voiceover/take1.mp3", voiceoverStartSeconds: 0.4, music: null, musicVolume: 0.18 },
+  sceneFrames: [88, 67, 193, 181, 184, 220, 165],
+  listenTapFrame: 34,
   extraEndFrames: 0,
 };

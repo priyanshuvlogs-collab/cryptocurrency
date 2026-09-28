@@ -12,10 +12,9 @@ const PHONE_W = 600;
 const PHONE_X = 240;
 const PHONE_Y = 470;
 
-export const ListenLive: React.FC<{ p: PromoProps["listen"] }> = ({ p }) => {
+export const ListenLive: React.FC<{ p: PromoProps["listen"]; tapAt: number }> = ({ p, tapAt }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const tapAt = 48;
   const playing = spring({ frame: frame - tapAt - 4, fps, config: { damping: 15 } });
   // Play button on the listen page sits at about 50% across, 72% down the screen.
   const screenW = PHONE_W - 28;
@@ -36,9 +35,9 @@ export const ListenLive: React.FC<{ p: PromoProps["listen"] }> = ({ p }) => {
         {p.sub}
       </FadeUp>
       <div style={{ position: "absolute", left: PHONE_X, top: PHONE_Y, transform: `scale(${interpolate(frame, [0, 135], [0.96, 1.02])})` }}>
-        <Phone src="shots/listen-pa.jpg" width={PHONE_W} shotHeight={1688} zoom={[60, 120, 1.18, 50, 72]} />
+        <Phone src="shots/listen-pa.jpg" width={PHONE_W} shotHeight={1688} zoom={[tapAt + 12, tapAt + 72, 1.18, 50, 72]} />
       </div>
-      <TapCursor from={[900, 1800]} to={btn} start={14} tapAt={tapAt} />
+      <TapCursor from={[900, 1800]} to={btn} start={Math.max(0, tapAt - 30)} tapAt={tapAt} />
       <div style={{ position: "absolute", left: 0, right: 0, bottom: 250, display: "flex", justifyContent: "center", opacity: playing, transform: `translateY(${(1 - playing) * 60}px)` }}>
         <Equalizer height={130} bars={30} width={18} />
       </div>

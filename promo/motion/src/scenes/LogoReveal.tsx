@@ -19,7 +19,7 @@ export const LogoReveal: React.FC<{ p: PromoProps["logo"] }> = ({ p }) => {
         </div>
         <div style={{ display: "flex", marginTop: 90 }}>
           {letters.map((l, i) => {
-            const s = spring({ frame: frame - 14 - i * 2, fps, config: { damping: 14, stiffness: 180 } });
+            const s = spring({ frame: frame - 6 - i * 2, fps, config: { damping: 14, stiffness: 180 } });
             return (
               <span
                 key={i}
@@ -41,7 +41,7 @@ export const LogoReveal: React.FC<{ p: PromoProps["logo"] }> = ({ p }) => {
             );
           })}
         </div>
-        <FadeUp delay={36} style={{ marginTop: 30, fontFamily: FONT.text, fontWeight: 800, fontSize: 36, letterSpacing: "0.28em", color: C.muted }}>
+        <FadeUp delay={22} style={{ marginTop: 30, fontFamily: FONT.text, fontWeight: 800, fontSize: 36, letterSpacing: "0.28em", color: C.muted }}>
           {p.tagline}
         </FadeUp>
       </AbsoluteFill>

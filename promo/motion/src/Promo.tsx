@@ -13,8 +13,7 @@ import { LogoReveal } from "./scenes/LogoReveal";
 import { WorldClocks } from "./scenes/WorldClocks";
 import { C, FONT, FPS } from "./theme";
 
-const T = 16; // transition length in frames
-const DURATIONS = [105, 105, 195, 135, 135, 225, 165]; // hook, logo, home, listen, clocks, advertise, end
+export const T = 16; // transition length in frames
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const TRANSITIONS: TransitionPresentation<any>[] = [
@@ -26,15 +25,16 @@ const TRANSITIONS: TransitionPresentation<any>[] = [
   fade(),
 ];
 
-/** Length without any voiceover padding. */
-export const BASE_DURATION = DURATIONS.reduce((a, b) => a + b, 0) - T * (DURATIONS.length - 1);
+/** Total length of a list of scene durations, minus the transition overlaps. */
+export const totalFrames = (durations: number[]) => durations.reduce((a, b) => a + b, 0) - T * (durations.length - 1);
 
 /** Frame where each scene starts (transitions overlap neighbouring scenes). */
-const STARTS = DURATIONS.map((_, i) => DURATIONS.slice(0, i).reduce((a, b) => a + b, 0) - T * i);
+const startsOf = (durations: number[]) => durations.map((_, i) => durations.slice(0, i).reduce((a, b) => a + b, 0) - T * i);
 
 /** Burned-in subtitle for muted autoplay: one line per scene, faded in and out. */
 const Subtitles: React.FC<{ lines: string[]; durations: number[] }> = ({ lines, durations }) => {
   const frame = useCurrentFrame();
+  const STARTS = startsOf(durations);
   let i = 0;
   while (i + 1 < STARTS.length && frame >= STARTS[i + 1]) i++;
   const line = lines[i];
@@ -65,14 +65,14 @@ const Subtitles: React.FC<{ lines: string[]; durations: number[] }> = ({ lines, 
 };
 
 export const Promo: React.FC<PromoProps> = (props) => {
-  const { audio, subtitles, extraEndFrames } = props;
-  const durations = DURATIONS.map((d, i) => (i === DURATIONS.length - 1 ? d + extraEndFrames : d));
-  const total = BASE_DURATION + extraEndFrames;
+  const { audio, subtitles, extraEndFrames, sceneFrames } = props;
+  const durations = sceneFrames.map((d, i) => (i === sceneFrames.length - 1 ? d + extraEndFrames : d));
+  const total = totalFrames(durations);
   const scenes = [
     <Hook key="hook" p={props.hook} />,
     <LogoReveal key="logo" p={props.logo} />,
     <HomeShowcase key="home" p={props.home} />,
-    <ListenLive key="listen" p={props.listen} />,
+    <ListenLive key="listen" p={props.listen} tapAt={props.listenTapFrame} />,
     <WorldClocks key="clocks" p={props.clocks} />,
     <Advertise key="advertise" p={props.advertise} />,
     <EndCard key="end" p={props.end} />,
