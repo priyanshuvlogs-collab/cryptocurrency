@@ -2,9 +2,10 @@ import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig } fr
 import { Background, PhulkariBand } from "../components/Background";
 import { FadeUp } from "../components/Kinetic";
 import { Record } from "../components/Record";
+import type { PromoProps } from "../schema";
 import { C, FONT } from "../theme";
 
-export const LogoReveal: React.FC = () => {
+export const LogoReveal: React.FC<{ p: PromoProps["logo"] }> = ({ p }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const pop = spring({ frame, fps, config: { damping: 12, stiffness: 90 } });
@@ -41,7 +42,7 @@ export const LogoReveal: React.FC = () => {
           })}
         </div>
         <FadeUp delay={36} style={{ marginTop: 30, fontFamily: FONT.text, fontWeight: 800, fontSize: 36, letterSpacing: "0.28em", color: C.muted }}>
-          LIVE PUNJABI RADIO
+          {p.tagline}
         </FadeUp>
       </AbsoluteFill>
       <div style={{ opacity: interpolate(frame, [20, 40], [0, 1], { extrapolateRight: "clamp" }) }}>

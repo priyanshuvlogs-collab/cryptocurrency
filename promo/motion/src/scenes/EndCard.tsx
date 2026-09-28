@@ -2,9 +2,10 @@ import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig } fr
 import { Background, PhulkariBand } from "../components/Background";
 import { FadeUp, RiseWords } from "../components/Kinetic";
 import { Record } from "../components/Record";
+import type { PromoProps } from "../schema";
 import { C, FONT } from "../theme";
 
-export const EndCard: React.FC = () => {
+export const EndCard: React.FC<{ p: PromoProps["end"] }> = ({ p }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const url = spring({ frame: frame - 16, fps, config: { damping: 12, stiffness: 120 } });
@@ -22,7 +23,7 @@ export const EndCard: React.FC = () => {
           <span style={{ color: C.marigold }}>RADIO</span>
         </div>
         <div style={{ marginTop: 60 }}>
-          <RiseWords words={["ਹੁਣੇ ਵਿਜ਼ਿਟ ਕਰੋ"]} delay={8} style={{ fontFamily: FONT.gurmukhi, fontWeight: 800, fontSize: 80, color: C.cream }} />
+          <RiseWords words={[p.visit]} delay={8} style={{ fontFamily: FONT.gurmukhi, fontWeight: 800, fontSize: 80, color: C.cream }} />
         </div>
         <div
           style={{
@@ -36,18 +37,18 @@ export const EndCard: React.FC = () => {
             textShadow: `8px 8px 0 ${C.magenta}`,
           }}
         >
-          indiradio.ca
+          {p.url}
         </div>
         <FadeUp delay={34} style={{ display: "flex", gap: 24, marginTop: 70 }}>
           <div style={{ background: C.red, color: "#fff", fontFamily: FONT.text, fontWeight: 800, fontSize: 40, padding: "26px 40px", borderRadius: 14, border: `3px solid ${C.ink}` }}>
-            ▶ LISTEN LIVE
+            {p.listen}
           </div>
           <div style={{ background: C.green, color: C.ink, fontFamily: FONT.text, fontWeight: 800, fontSize: 40, padding: "26px 40px", borderRadius: 14, border: `3px solid ${C.ink}` }}>
-            WhatsApp 778-834-0325
+            {p.whatsapp}
           </div>
         </FadeUp>
         <FadeUp delay={48} style={{ marginTop: 50, fontFamily: FONT.text, fontWeight: 700, fontSize: 40, color: C.muted }}>
-          Advertise: indiradio.ca/advertise
+          {p.footer}
         </FadeUp>
       </AbsoluteFill>
       <div style={{ opacity: interpolate(frame, [0, 20], [0, 1]) }}>

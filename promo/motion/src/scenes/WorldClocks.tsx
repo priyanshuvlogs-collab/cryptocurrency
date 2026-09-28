@@ -1,6 +1,7 @@
 import { AbsoluteFill, Easing, interpolate, spring, useCurrentFrame, useVideoConfig } from "remotion";
 import { Background } from "../components/Background";
 import { FadeUp, RiseWords } from "../components/Kinetic";
+import type { PromoProps } from "../schema";
 import { C, FONT } from "../theme";
 
 // An example moment (7:00 PM in Vancouver, September) shown in four cities.
@@ -27,7 +28,7 @@ const Clock: React.FC<{ h: number; m: number; progress: number; size: number }> 
   );
 };
 
-export const WorldClocks: React.FC = () => {
+export const WorldClocks: React.FC<{ p: PromoProps["clocks"] }> = ({ p }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const progress = interpolate(frame, [20, 80], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.out(Easing.cubic) });
@@ -36,14 +37,14 @@ export const WorldClocks: React.FC = () => {
       <Background />
       <div style={{ position: "absolute", top: 170, left: 90, right: 90 }}>
         <RiseWords
-          words={["ਹਰ ਸ਼ੋਅ,", "ਤੁਹਾਡੇ ਸਮੇਂ ਵਿੱਚ"]}
+          words={p.title}
           stagger={6}
           lineGap={-24}
           colors={[C.cream, C.marigold]}
           style={{ fontFamily: FONT.gurmukhi, fontWeight: 800, fontSize: 120, lineHeight: 1.12 }}
         />
         <FadeUp delay={12} style={{ fontFamily: FONT.text, fontWeight: 700, fontSize: 44, color: C.muted, marginTop: 10 }}>
-          Show times convert to your city automatically.
+          {p.sub}
         </FadeUp>
       </div>
       <div style={{ position: "absolute", top: 760, left: 90, right: 90, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 40 }}>
