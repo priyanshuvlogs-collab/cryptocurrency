@@ -6,6 +6,8 @@ Indi Radio promo video pipeline: ElevenLabs Punjabi voiceover -> FFmpeg render.
     python main.py --voice my.mp3   # skip TTS and use an existing audio file
     python main.py --skip-tts       # reuse build/voice.mp3 from a previous run
     python main.py --dry-run        # print the FFmpeg command without running it
+    python main.py --config config.motion.json --tts-only
+                                    # 32 s voiceover for the Remotion video (motion/)
 
 Settings live in config.json. The API key is read from the environment
 (ELEVENLABS_API_KEY), or from promo/.env or the repo's .env.local; it is never
@@ -250,6 +252,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--voice", type=Path, help="use this audio file instead of calling ElevenLabs")
     parser.add_argument("--skip-tts", action="store_true", help="reuse the voice file from a previous run")
     parser.add_argument("--dry-run", action="store_true", help="print the FFmpeg command only")
+    parser.add_argument("--tts-only", action="store_true", help="only generate the voiceover (e.g. for the Remotion video)")
     args = parser.parse_args(argv)
 
     load_env()
@@ -261,7 +264,8 @@ def main(argv: list[str] | None = None) -> int:
             voice = cfg["output"]["voice"]
         else:
             voice = generate_voice(cfg)
-        render_video(cfg, voice, dry_run=args.dry_run)
+        if not args.tts_only:
+            render_video(cfg, voice, dry_run=args.dry_run)
     except PipelineError as exc:
         print(f"Error: {exc}", file=sys.stderr)
         return 1
