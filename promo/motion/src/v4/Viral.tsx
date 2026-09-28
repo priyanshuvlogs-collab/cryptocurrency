@@ -34,16 +34,17 @@ export const defaultViralProps: ViralProps = {
   endLine: "ਜਦੋਂ ਇੰਡੀ ਰੇਡੀਓ ਚੱਲਦਾ ਹੈ…",
   tagline: "ਘਰ ਦੀ ਆਵਾਜ਼",
   url: "indiradio.ca",
-  beatPeriodFrames: 17.14, // 105 BPM; replaced with the measured value
-  beatOffsetFrames: 45,
+  beatPeriodFrames: 17.143, // 105 BPM, measured from music.mp3
+  beatOffsetFrames: 9.24, // first beat after the build trims the intro so the drop lands at 1.5 s
 };
 
 /* Timeline in frames (30 fps). The music drop lands at 45 (1.5 s). */
 export const VIRAL = {
   hookEnd: 45,
-  cuts: [0, 150, 270, 390] as const, // shot starts
-  shotLen: [150, 120, 120, 120] as const,
-  endFrom: 510,
+  // Cuts on the beat grid (105 BPM, beats at 0.308 s + n × 0.571 s): 4.88 s, 8.88 s, 12.88 s, 16.88 s
+  cuts: [0, 146, 266, 386] as const, // shot starts
+  shotLen: [146, 120, 120, 120] as const,
+  endFrom: 506,
   total: 600,
 };
 
